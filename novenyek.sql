@@ -1,27 +1,27 @@
 CREATE TABLE novenyek ( /*faj*/
     id int NOT NULL,
-    PRIMARY KEY (id),
     magyar_nev varchar(50),
     latin_nev varchar(50),
     fajta_id int NOT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY (fajta_id) REFERENCES fajta(id)
-)
+);
 
 CREATE TABLE kapcsolat (
     noveny1_id int NOT NULL,
     noveny2_id int NOT NULL,
-    kapcsolatuk varchar(50),
+    kapcsolatuk varchar(50) NOT NULL, 
     FOREIGN KEY (noveny1_id) REFERENCES novenyek(id),
     FOREIGN KEY (noveny2_id) REFERENCES novenyek(id)
-)
+);
 
 CREATE TABLE fajta (
-    id int not NULL ,
-    PRIMARY KEY (id),
-    nev varchar(50)
+    id int NOT NULL,
+    nev varchar(50),
     sor_tav int,
-    to_tav int
-)
+    to_tav int,
+    PRIMARY KEY (id)
+);
 
 
 
