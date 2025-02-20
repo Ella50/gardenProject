@@ -1,3 +1,6 @@
+CREATE DATABASE adatbazis;
+USE adatbazis,
+
 CREATE TABLE fajta (
     id int NOT NULL,
     nev varchar(50),
