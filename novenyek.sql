@@ -31,7 +31,7 @@ INSERT INTO novenyek (id, magyar_nev, latin_nev, fajta_id)
 VALUES
 (1, 'Sárgarépa', 'Daucus Carota', 1),
 (2, 'Paradicsom', 'Solanum lycopersicum', 2),
-(3, 'Káposzta', 'Brassica oleracea', 3),
+(3, 'Káposzta', 'Brassica oleracea', 3)
 
 
 
@@ -43,7 +43,7 @@ INSERT INTO fajta (id, nev, sor_tav, to_tav)
 (2, 'Roma', 60, 40),
 
 (3, 'Fehér Káposzta', 50, 30),
-(3, 'Kelkáposzta', 50, 30),
+(3, 'Kelkáposzta', 50, 30)
 
 
 
