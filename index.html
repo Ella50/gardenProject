@@ -2,9 +2,126 @@
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
-    <title>Felhasználók listája</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Kerttervező</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
 </head>
 <body>
+    <h1>Növények</h1>
+    <table id="novenyekTable" >
+        <tr>
+            <th>Magyar név</th>
+            <th>Latin név</th>
+        </tr>
+    </table>
+
+    <form id="parcellaForm">
+        <label for="noveny1">Növény 1:</label>
+        <select name="noveny1" id="noveny1">
+          <option value="1">Sárgarépa</option>
+          <option value="2">Paradicsom</option>
+          <!-- További növények -->
+        </select>
+        <label for="mennyiseg1">Mennyiség:</label>
+        <input type="number" name="mennyiseg1" id="mennyiseg1" min="1" value="1">
+      
+        <!-- További növények és mennyiségek -->
+      
+        <button type="submit">Parcella generálása</button>
+      </form>
+
+    <div class="parcella" id="parcella">
+        <!-- Itt jelennek meg a növények -->
+      </div>
+
+    <script>
+        async function loadDatabase() {
+            // SQLite.js betöltése
+            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
+
+            // Adatbázis fájl betöltése
+            const response = await fetch("kerttervezo.db");
+            const buffer = await response.arrayBuffer();
+            const db = new SQL.Database(new Uint8Array(buffer));
+
+            // Lekérdezés futtatása
+            const results = db.exec("SELECT magyar_nev, latin_nev FROM novenyek");
+            
+            // Adatok beillesztése a táblába
+            let table = document.getElementById("novenyekTable");
+            results[0].values.forEach(row => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td>`;
+                table.appendChild(tr);
+            });
+        }
+
+        loadDatabase();
+    </script>
+
+
+
+    <script>
+        
+
+    function elhelyezNoveny(parcella, noveny, sorTav, toTav, mennyiseg) {
+        // Iteráljunk végig a kívánt mennyiségen és helyezzük el a növényeket
+        let x = 0, y = 0;
+        for (let i = 0; i < mennyiseg; i++) {
+            if (x + toTav > parcella.width) {
+            x = 0;
+            y += sorTav;
+            }
+            // Elhelyezés logika, pl. HTML elem létrehozása és pozicionálása
+            let novenyElem = document.createElement('div');
+            novenyElem.style.position = 'absolute';
+            novenyElem.style.left = `${x}px`;
+            novenyElem.style.top = `${y}px`;
+            novenyElem.textContent = noveny.nev;
+            parcella.appendChild(novenyElem);
+            x += toTav;  // Következő növény pozíciója
+        }
+    }
+
+    function elhelyezNovenyKapcsolatokkal(parcella, novenyek, kapcsolatok) {
+        let x = 0, y = 0;
+        let elhelyezettNovenyek = [];
+        
+        for (let i = 0; i < novenyek.length; i++) {
+            let noveny = novenyek[i];
+            let sorTav = noveny.sor_tav;
+            let toTav = noveny.to_tav;
+            let mennyiseg = noveny.mennyiseg;
+            
+            for (let j = 0; j < mennyiseg; j++) {
+            // Ellenőrizd, hogy nem ütközik-e más növénnyel, amely "nem szeret" egymás mellett
+            if (checkForConflicts(elhelyezettNovenyek, noveny, x, y, kapcsolatok)) {
+                // Ha ütközik, új helyet keres
+                x += toTav;
+                if (x + toTav > parcella.width) {
+                x = 0;
+                y += sorTav;
+                }
+            }
+            
+            let novenyElem = document.createElement('div');
+            novenyElem.style.position = 'absolute';
+            novenyElem.style.left = `${x}px`;
+            novenyElem.style.top = `${y}px`;
+            novenyElem.textContent = noveny.nev;
+            parcella.appendChild(novenyElem);
+            
+            elhelyezettNovenyek.push({ noveny, x, y });  // Eltároljuk a növény pozícióját
+            x += toTav;  // Következő növény pozíciója
+            }
+        }
+    
+    }
+    elhelyezNoveny()
+    elhelyezNovenyKapcsolatokkal();
+
+    </script>
 
 </body>
 </html>
