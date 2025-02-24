@@ -1,0 +1,3 @@
+
+Parancsorba (mappába,amibe vannak)
+    sqlite3 kerttervezo.db < novenyek.sql
