@@ -10,14 +10,13 @@ CREATE TABLE fajta (
     FOREIGN KEY (novenyek_id) REFERENCES novenyek(id)
 );
 
-CREATE TABLE novenyek ( /*faj --> pl. paradicsom*/
+CREATE TABLE novenyek (
     id int NOT NULL,
     magyar_nev varchar(50),
     latin_nev varchar(50),
     sor_tav int,
     to_tav int,
-    PRIMARY KEY (id),
-    /*FOREIGN KEY (fajta_id) REFERENCES fajta(id)*/
+    PRIMARY KEY (id)
 );
 
 
@@ -109,11 +108,11 @@ VALUES
 (12, 'Cékla', 'Beta vulgaris', 30, 8),
 (13, 'Retek', 'Raphanus sativus', 20, 5),
 (14, 'Spenót', 'Spinicia oleracea', 30, 5),
-(15, 'Bab', 'Vicia faba', 50, 15);
-(16, 'Búza', 'Triticum aestivum', 30, 5);
-(17, 'Burgonya', 'Solanum tuberosum', 75, 30);
-(18, 'Mogyoró', 'Corylus avellana', 400, 300);
-(19, 'Almafa', 'Malus domestica', 300, 300);
+(15, 'Bab', 'Vicia faba', 50, 15),
+(16, 'Búza', 'Triticum aestivum', 30, 5),
+(17, 'Burgonya', 'Solanum tuberosum', 75, 30),
+(18, 'Mogyoró', 'Corylus avellana', 400, 300),
+(19, 'Almafa', 'Malus domestica', 300, 300),
 (20, 'Málna', 'Rubus idaeus', 200, 40);
 
 

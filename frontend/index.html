@@ -30,6 +30,17 @@
     <script src="script.js"></script>-->
 
     <script>
+        const sqlite = require('sqlite3').verbose();
+
+        const db = new sqlite3.Database('./kerttervezo.db', (err) => {
+            if (err) {
+                console.error('Hiba az adatbázis csatlakozásnál:', err.message);
+            } else {
+                console.log('Sikeresen csatlakoztál az SQLite adatbázishoz!');
+            }
+        });
+
+        
         function kuldes(){
             let mennyiseg = document.getElementById('mennyiseg').value;
             console.log(mennyiseg); 
