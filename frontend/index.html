@@ -8,20 +8,16 @@
 </head>
 <body>
     <div id="kozep">
-        <h1 id="cim1">Parcella nagysága</h1>
-        <form action="" id="form1">
-            <!--<label for="hossz">A parcella hossza (méter)</label>
-            <input type="number" id="hossz" name="hossz" min="1" max="20">
-            <br>
-            <label for="szelesseg">A parcella szélessége (méter)</label>
-            <input type="number" id="szelesseg" name="szelesseg" min="1" max="20">
-            <br>
-            <input type="submit" value="Küldés" style="text-align: center;">-->
-            <label for="mennyiseg">A parcellák száma (darab)</label>
-            <input type="number" id="mennyiseg" name="mennyiseg" min="1" max="16">
-            <br>
-           <button onclick="kuldes()">Küldés</button>
-        </form>
+        <div>
+            <h1 id="cim1">Parcella nagysága</h1>
+            <form action="" id="form1">
+                <label for="mennyiseg">A parcellák száma (darab)</label>
+                <input type="number" id="mennyiseg" name="mennyiseg" min="1" max="16">
+                <br>
+               <button onclick="kuldes()">Küldés</button>
+            </form>
+        </div>
+        
     </div>
     
  <!--h1>Növények listája</h1>
@@ -45,13 +41,16 @@
             else{
                 div1.remove();
                 let div2 = document.createElement("div");
-                div2.innerHTML = `<h1 id="cim1">Parcella nagyága (méter):</h1>`
-                div2.id = "kozep";
+                let h1 = document.createElement("h1");
+                h1.innerHTML = "Parcella nagyága (méter)"
+                div2.id = "kozep2";
+                let div3 = document.createElement("div");
                 let form1 = document.createElement("form");
                 form1.action = "";
                 form1.id = "form1";
                 let label1 = document.createElement("label");
                 label1.for = "hossz";
+
                 label1.textContent = "A parcella hossza (méter):";
                 let input1 = document.createElement("input");
                 input1.type = "number";
@@ -74,7 +73,9 @@
                 input2.id = "szelesseg";
 
                 let kuldes2 = document.createElement("button")
-                kuldes2.innerHTML = "Küldés"
+                kuldes2.id = "kuldes2"; 
+                kuldes2.textContent = "Küldés"
+                kuldes2.type = "submit";
                 
 
                 form1.appendChild(label1);
@@ -84,34 +85,34 @@
                 form1.appendChild(input2);
                 form1.appendChild(br2);
                 form1.appendChild(kuldes2);
-                div2.appendChild(form1);
+                div3.appendChild(h1)
+                div3.appendChild(form1);
+                div2.appendChild(div3);
                 document.body.appendChild(div2);
+                
 
-               // kuldes2.onclick = kuldes2();
-
-                /*function kuldes2(){
-                    if(input1 > 20){
+                kuldes2.addEventListener("click", function (event){
+                    event.preventDefault();
+                    if(parseInt(input1.value) > 20){
                         alert("Túl nagy parcella hosszt adott meg!")
                     }
-                    else if(input2 > 20){
+                    else if(parseInt(input1.value) > 20){
                         alert("Túl nagy parcella szélességet adott meg!")
                     }
-                    else if(input2.length == 0){
-                        alert("Nem adott meg parcella szélességet!")
-                    }
-                    else if(input1.length == 0){
+                    else if(input1.value.length === 0){
                         alert("Nem adott meg parcella hosszt!")
+                    }
+                    else if(input2.value.length === 0){
+                        alert("Nem adott meg parcella szélességet!")
                     }
                     else{
                         div2.remove();
+                        
                     }
-                }*/
+                })
             }
-            
-            
         }
-            
-
+        
        
     </script>
 </body>
