@@ -1,6 +1,7 @@
 body {
     font-family: Arial, sans-serif;
     padding: 20px;
+    background-color: wheat;
 }
 ul {
     list-style-type: none;
@@ -23,4 +24,24 @@ button {
     transform: translate(-50%, -50%);
     text-align: center;
     line-height: 200%;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }
+
+#kozep2{
+    width: 400px;
+    height: 200px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 200%;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
