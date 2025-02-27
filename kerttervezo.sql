@@ -1,3 +1,8 @@
+/*
+
+NEM EZT HASZNÁLJUK
+
+
 CREATE TABLE fajta (
     id int NOT NULL,
     nev varchar(50),
@@ -52,3 +57,4 @@ INSERT INTO kapcsolat (noveny1_id, noveny2_id, kapcsolatuk)
 VALUES
 (1, 2, 'Nem szeret'),
 (2, 3, 'Szeret')
+*/
