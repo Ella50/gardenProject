@@ -43,8 +43,8 @@ VALUES
 (7, 'Marketmore', 5),
 (8, 'Lemon',5),
 
-(9, 'Iceberg', 4),
-(10, 'Butterhead',4),
+(9, 'Calabrese', 4),
+(10, 'Romanesco',4),
 
 (11, 'Silver Queen',6),
 (12, 'Golden Bantam',6),
@@ -67,8 +67,8 @@ VALUES
 (23, 'Cherry Belle', 13),
 (24, 'White Icicle', 13),
 
-(25, 'Pole Bean', 11),
-(26, 'Bush Bean', 11),
+(25, 'Black Beauty', 11),
+(26, 'Listada de Gandia', 11),
 
 (27, 'Tyee', 14),
 (28, 'Bloomsdale', 14),
@@ -97,14 +97,14 @@ VALUES
 (1, 'Sárgarépa', 'Daucus carota', 30, 5),
 (2, 'Paradicsom', 'Solanum lycopersicum', 70, 30),
 (3, 'Káposzta', 'Brassica oleracea', 50, 40),
-(4, 'Fejes saláta', 'Lactuca sativa', 30, 25),
+(4, 'Brokkoli', 'Brassica oleracea var. italica', 50, 40),
 (5, 'Uborka', 'Cucumis sativus', 100, 40),
 (6, 'Kukorica', 'Zea mays', 75, 30),
 (7, 'Fokhagyma', 'Allium sativum',30, 10),
 (8, 'Paprika', 'Capsicum annuum', 50, 40),
 (9, 'Tök', 'Cucurbita pepo', 120, 90),
 (10, 'Borsó', 'Pisom sativum', 60, 20),
-(11, 'Kertibab', 'Phaseolus vulgaris', 60, 25),
+(11, 'Padlizsán', 'Solanum melongena', 60, 40),
 (12, 'Cékla', 'Beta vulgaris', 30, 8),
 (13, 'Retek', 'Raphanus sativus', 20, 5),
 (14, 'Spenót', 'Spinicia oleracea', 30, 5),
@@ -156,9 +156,12 @@ VALUES
 (10, 1, 'szeret'),
 (10, 7, 'nem'),
 
-(11, 5, 'szeret'),
-(11, 6, 'szeret'),
+(11, 15, 'szeret'),
+(11, 2, 'szeret'),
+(11, 8, 'szeret'),
+(11, 17, 'nem'),
 (11, 7, 'nem'),
+
 
 (12, 4, 'szeret'),
 (12, 3, 'nem'),
