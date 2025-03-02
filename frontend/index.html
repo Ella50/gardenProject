@@ -13,12 +13,12 @@
     </div>
     <div id="kozep">
         <div>
-            <h1 id="cim1">Parcella nagysága</h1>
+            <h1 id="cim1">Parcella</h1>
             <form action="" id="form1">
                 <label for="mennyiseg">A parcellák száma (darab)</label>
                 <input type="number" id="mennyiseg" name="mennyiseg" min="1" max="16" value="1">
                 <br>
-               <button onclick="kuldes()">Küldés</button>
+               <button onclick="kuldes()">Tovább</button>
             </form>
         </div>
         
@@ -89,7 +89,7 @@
 
                 let kuldes2 = document.createElement("button")
                 kuldes2.id = "kuldes2"; 
-                kuldes2.textContent = "Küldés"
+                kuldes2.textContent = "Tovább"
                 kuldes2.type = "submit";
                 
 
@@ -122,6 +122,10 @@
                     }
                     else{
                         div2.remove();
+
+
+
+
                         
                     }
                 })
@@ -130,5 +134,16 @@
         
        
     </script>
+
+
+
+
+
+
+    <div id="footer">
+        <p style="color: wheat; font-size: 9pt; text-align: center;">© 2025</p>
+    </div>
+
+
 </body>
 </html>
