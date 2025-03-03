@@ -6,6 +6,7 @@
     <title>Kerttervező</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
 </head>
 <body>
     <div id="top">
@@ -34,7 +35,7 @@
     <script src="script.js"></script>-->
 
     <script>
-        const sqlite = require('sqlite3').verbose();
+       /* const sqlite = require('sqlite3').verbose();
 
         const db = new sqlite3.Database('./kerttervezo.db', (err) => {
             if (err) {
@@ -42,7 +43,27 @@
             } else {
                 console.log('Sikeresen csatlakoztál az SQLite adatbázishoz!');
             }
-        });
+        });*/
+
+        async function loadDatabase() {
+            // SQLite.js betöltése
+            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
+
+            // Adatbázis fájl betöltése
+            const response = await fetch("kerttervezo.db");
+            const buffer = await response.arrayBuffer();
+            const db = new SQL.Database(new Uint8Array(buffer));
+
+            // Lekérdezés futtatása
+            const results = db.exec("SELECT magyar_nev, latin_nev FROM novenyek");
+            let tömb = [db.exec("SELECT magyar_nev FROM novenyek")];
+            
+                console.log(tömb);
+           
+            
+        }
+
+        loadDatabase();
 
         
         function kuldes(){
@@ -122,11 +143,10 @@
                     }
                     else{
                         div2.remove();
+                        let div4 = document.createElement("div");
+                        div4.id = "kozep3";
 
 
-
-
-                        
                     }
                 })
             }

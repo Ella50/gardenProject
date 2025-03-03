@@ -100,7 +100,31 @@ li {
     background-color: #85A947;
     padding: 30px;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    border-radius: 10px;
 }
+
+#kozep2{
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 200%;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: black 15px solid;
+    background-color: #85A947;
+    padding: 30px;
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    border-radius: 10px;
+}
+
+
+
 
 button{
     cursor: pointer;
