@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="novenyek/favicon.png">
     <title>Kerttervező</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
 </head>
@@ -15,39 +16,6 @@
             <th>Latin név</th>
         </tr>
     </table>
-
-
-
-    <img src="repa.png" alt="" width="30px">
-    <img src="paradicsom.png" alt="" width="25px">
-    <img src="burgonya.png" alt="" width="25px">
-    <img src="kaposzta.png" alt="" width="25px">
-    <img src="borso.png" alt="" width="25px">
-    <img src="bab.png" alt="" width="25px">
-    <img src="mogyoro.png" alt="" width="25px">
-    <img src="uborka.png" alt="" width="25px">
-    <img src="paprika.png" alt="" width="25px">
-    <img src="alma.png" alt="" width="25px">
-    <img src="padlizsan.png" alt="" width="25px">
-    <img src="malna.png" alt="" width="25px">
-    <img src="tok.png" alt="" width="25px">
-    <img src="buza.png" alt="" width="25px">
-    <img src="retek.png" alt="" width="25px">
-    <img src="kukorica.png" alt="" width="25px">
-    <img src="cekla.png" alt="" width="25px">
-    <img src="brokkoli.png" alt="" width="25px">
-    <img src="spenot.png" alt="" width="25px">
-
-    <img src="fokhagyma.png" alt="" width="25px">
-
-
-
-
-
-
-
-
-
 
     <form id="parcellaForm">
         <label for="noveny1">Növény 1:</label>
@@ -66,7 +34,7 @@
 
     <div class="parcella" id="parcella">
         <!-- Itt jelennek meg a növények -->
-      </div>
+      </div> <img src="" alt="">
 
     <script>
         async function loadDatabase() {
@@ -79,24 +47,39 @@
             const db = new SQL.Database(new Uint8Array(buffer));
 
             // Lekérdezés futtatása
-            const results = db.exec("SELECT magyar_nev, latin_nev FROM novenyek");
+            const results = db.exec("SELECT magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
             
             // Adatok beillesztése a táblába
             let table = document.getElementById("novenyekTable");
             results[0].values.forEach(row => {
                 let tr = document.createElement("tr");
-                tr.innerHTML = `<td>${row[0]}</td><td>${row[1]}</td>`;
+                tr.innerHTML = `<td><img src="${row[4]}"></td><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}cm</td><td>${row[3]}cm</td><td><input type="number" id="mennyiseg" name="mennyiseg" min="1" max="100" value="0"></td>`;
                 table.appendChild(tr);
             });
         }
 
         loadDatabase();
+        /*
+                  let table = document.createElement("table");
+            let body = document.getElementsByTagName('body')[0];
+            body.appendChild(table);
+
+            let magyar = document.createElement("th");
+            let latin = document.createElement("th");
+            let to = document.createElement("th");
+            let sor = document.createElement("th");
+
+            table.appendChild(magyar);
+            table.appendChild(latin);
+            table.appendChild(sor);
+            table.appendChild(to);
+        */
     </script>
 
 
 
     <script>
-        
+   /*     
 
     function elhelyezNoveny(parcella, noveny, sorTav, toTav, mennyiseg) {
         // Iteráljunk végig a kívánt mennyiségen és helyezzük el a növényeket
@@ -154,6 +137,7 @@
     elhelyezNoveny()
     elhelyezNovenyKapcsolatokkal();
 
+    */
     </script>
 
 </body>
