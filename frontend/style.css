@@ -1,3 +1,4 @@
+
 /*Hover effekt az ikonokra, hogy kiírja a tulajdonságait (név, fajta, sor- tőtáv)*/
 /*Színek:
     #123524
@@ -119,76 +120,3 @@ li {
 #kozep3{
     width: auto;
     height: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    line-height: 200%;
-    vertical-align: middle;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    border: #3E7B27 15px solid;
-    background-color: #85A947;
-    padding: 30px;
-    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
-    border-radius: 10px;
-    animation: fadeIn 0.8s ease-in-out;
-}
-
-
-
-
-button{
-    cursor: pointer;
-    background-color: #123524;
-    color: white;
-    border: none;
-    padding: 5px 20px 5px 20px;
-    border-radius: 10px;
-    margin: 10px;
-}
-
-button:hover{
-    background-color: rgb(17, 87, 17);
-    color: rgb(231, 223, 223);
-    transform: scale(1.05);
-    
-}
-
-
-input[type=number]{
-    background-color: #a7cc66;
-    margin-left: 10px;
-    border: 0.5px solid #123524;
-    border-radius: 6px;
-    text-align: center;
-}
-
-input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
-    opacity: 1;
-}
-
-  
-input[type=number]:active, input[type=number]:focus{
-    outline: none;
-}
-
-
-#footer{
-    background-color: #123524;
-    width: 100%;
-    height: 35px;
-    border-top: #3E7B27 5px solid;
-    box-shadow: 10px -10px 26px -1px rgba(0, 0, 0, 0.226);
-    position: fixed;
-    bottom: 0;
-}
-
-#footer p {
-    color: wheat;
-    font-size: 9pt;
-    text-align: center;
-    margin-top: 8px;
-}
