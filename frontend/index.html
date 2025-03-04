@@ -6,6 +6,7 @@
     <title>Kerttervező</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
     <link rel="icon" type="image/x-icon" href="\novenyek/favicon.png">
 </head>
 <body>
@@ -35,7 +36,34 @@
     <script src="script.js"></script>-->
 
     <script>
-        const sqlite = require('sqlite3').verbose();
+
+        class Noveny {
+            constructor(id, magyar, latin, sor_tav, to_tav, kep) {
+                this.id = id;
+                this.magyar = magyar;
+                this.latin = latin;
+                this.sor_tav = sor_tav;
+                this.to_tav = to_tav;
+                this.kep = kep;
+
+            }
+        }
+        class Kapcsolat {
+            constructor(noveny1_id, noveny2_id, kapcsolatuk) {
+                this.noveny1_id = noveny1_id;
+                this.noveny2_id = noveny2_id;
+                this.kapcsolatuk = kapcsolatuk;
+            }
+        }
+        class Fajta {
+            constructor(id, nev, noveny_id) {
+                this.id = id;
+                this.nev = nev;
+                this.noveny_id = noveny_id;
+  
+            }
+        }
+        /*const sqlite = require('sqlite3').verbose();
 
         const db = new sqlite3.Database('./kerttervezo.db', (err) => {
             if (err) {
@@ -43,7 +71,64 @@
             } else {
                 console.log('Sikeresen csatlakoztál az SQLite adatbázishoz!');
             }
-        });
+        });*/
+
+        async function loadDatabase() {
+            // SQLite.js betöltése
+            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
+
+            // Adatbázis fájl betöltése
+            const response = await fetch("kerttervezo.db");
+            const buffer = await response.arrayBuffer();
+            const db = new SQL.Database(new Uint8Array(buffer));
+
+            //Növények tábla listája + a táblázat
+            const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
+            
+            let table = document.getElementById("novenyekTable");
+
+            let novenyekLista = [];
+
+            results[0].values.forEach(row => {
+                let tr = document.createElement("tr");
+                tr.innerHTML = `<td><img src="${row[5]}"></td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}cm</td><td>${row[4]}cm</td><td><input type="number" id="mennyiseg" name="mennyiseg" min="1" max="100" value="0"></td>`;
+                table.appendChild(tr);
+
+                let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
+                novenyekLista.push(noveny);
+            });
+            console.log(novenyekLista[1].latin)
+
+
+            //Kapcsolat táblának a listája
+            const results2 = db.exec("SELECT noveny1_id, noveny2_id, kapcsolatuk FROM kapcsolat");
+
+            let kapcsolatLista = [];
+
+            results2[0].values.forEach(row => {
+
+                let kapcs = new Kapcsolat(row[0], row[1], row[2]);
+                kapcsolatLista.push(kapcs);
+            });
+            console.log(kapcsolatLista[1].kapcsolatuk)
+
+
+            //Fajta táblának a listája
+            const results3 = db.exec("SELECT id, nev, novenyek_id FROM fajta");
+
+            let fajtaLista = [];
+
+            results3[0].values.forEach(row => {
+
+                let faj = new Fajta(row[0], row[1], row[2]);
+                fajtaLista.push(faj);
+            });
+            console.log(fajtaLista[1].nev)
+
+
+        }
+
+        loadDatabase();
 
         
         function kuldes(){
