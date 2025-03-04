@@ -6,16 +6,18 @@
     #EFE3C2
 */
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
+
+
 
 
 body {
-    font-family: Arial, sans-serif;
-    background-color: #EFE3C2;
-    /*background-image: linear-gradient(to bottom, #EFE3C2 260%, #faeaaf 50%, #e0d5b5 60% );
-    background-repeat: no-repeat;
-    background-size: 100% 100vh;
-    background-attachment: fixed;*/
+    font-family: 'Poppins';
+    font-weight: lighter;
 
+    background-color:  #EFE3C2;
+   /* background-image: url('hatter.png');*/
+    
     background-image: url('vine.png'), url('vine2.png');
     background-repeat: repeat-y, repeat-y;
     background-position: left, right;
@@ -31,23 +33,26 @@ body {
 #top{
     background-color: #123524;
     width: 100%;
-    height: 100px;
+    height: 80px;
     border-bottom: #3E7B27 15px solid;
-    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
 }
 
 #oldalnev{
-    color: white;
+    color: rgb(243, 233, 233);
     text-align: center;
     margin: auto;
     vertical-align: middle;
     padding: 20px;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-weight: lighter;
+    letter-spacing: 1.5px;
 }
 
 h1{
     padding: 10px;
     margin: 10px;
+
 }
 
 
@@ -61,7 +66,10 @@ li {
     margin: 5px 0;
 }
 
-
+@keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -45%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+}
 
 #kozep{
     width: auto;
@@ -80,7 +88,9 @@ li {
     border: #3E7B27 15px solid;
     padding: 30px;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
 #kozep2{
@@ -100,10 +110,12 @@ li {
     background-color: #85A947;
     padding: 30px;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
-#kozep2{
+#kozep3{
     width: auto;
     height: auto;
     position: absolute;
@@ -121,6 +133,7 @@ li {
     padding: 30px;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
     border-radius: 10px;
+    animation: fadeIn 0.8s ease-in-out;
 }
 
 
@@ -148,6 +161,7 @@ input[type=number]{
     background-color: #a7cc66;
     margin-left: 10px;
     border: 0.5px solid #123524;
+    border-radius: 6px;
     text-align: center;
 }
 
@@ -164,9 +178,16 @@ input[type=number]:active, input[type=number]:focus{
 #footer{
     background-color: #123524;
     width: 100%;
-    height: 25px;
+    height: 35px;
     border-top: #3E7B27 5px solid;
-    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    box-shadow: 10px -10px 26px -1px rgba(0, 0, 0, 0.226);
     position: fixed;
     bottom: 0;
+}
+
+#footer p {
+    color: wheat;
+    font-size: 9pt;
+    text-align: center;
+    margin-top: 8px;
 }
