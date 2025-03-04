@@ -39,6 +39,14 @@ body {
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
 }
 
+#footer{
+    /*background-color: #123524;
+    width: 100%;
+    height: 80px;
+    border-bottom: #3E7B27 15px solid;
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);*/
+}
+
 #oldalnev{
     color: rgb(243, 233, 233);
     text-align: center;
@@ -120,3 +128,80 @@ li {
 #kozep3{
     width: auto;
     height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 200%;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: #3E7B27 15px solid;
+    background-color: #85A947;
+    padding: 30px;
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    animation: fadeIn 0.8s ease-in-out;
+    max-width: 70%;
+    flex-wrap: wrap;
+}
+
+#kozep4{
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    line-height: 200%;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: #3E7B27 15px solid;
+    background-color: #85A947;
+    padding: 30px;
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    animation: fadeIn 0.8s ease-in-out;
+    max-width: 70%;
+    flex-wrap: wrap;
+}
+
+.gomb{
+   width: 10%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    background-color: #123524;
+    color: #EFE3C2;
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    transition: 0.3s;
+    box-shadow: 0 9px #999;
+}
+
+.gomb:hover{
+    background-color: #3E7B27;
+    color: #EFE3C2;
+    transition: 0.3s;
+}
+
+.gomb.active{
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+}

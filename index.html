@@ -90,9 +90,9 @@
             let novenyekLista = [];
 
             results[0].values.forEach(row => {
-                let tr = document.createElement("tr");
+                /*let tr = document.createElement("tr");
                 tr.innerHTML = `<td><img src="${row[5]}"></td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}cm</td><td>${row[4]}cm</td><td><input type="number" id="mennyiseg" name="mennyiseg" min="1" max="100" value="0"></td>`;
-                table.appendChild(tr);
+                table.appendChild(tr);*/
 
                 let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
                 novenyekLista.push(noveny);
@@ -132,6 +132,8 @@
 
         
         function kuldes(){
+            
+
             let mennyiseg = document.getElementById('mennyiseg').value;
             console.log(mennyiseg); 
             let div1 = document.getElementById("kozep");
@@ -159,6 +161,7 @@
                 input1.max = "20";
                 input1.name = "hossz";
                 input1.id = "hossz";
+                input1.value = "1";
 
                 let br = document.createElement("br");
                 let br2 = document.createElement("br")
@@ -172,6 +175,7 @@
                 input2.max = "20";
                 input2.name = "szelesseg";
                 input2.id = "szelesseg";
+                input2.value = "1";
 
                 let kuldes2 = document.createElement("button")
                 kuldes2.id = "kuldes2"; 
@@ -207,12 +211,77 @@
                         alert("Nem adott meg parcella szélességet!")
                     }
                     else{
-                        div2.remove();
+                        async function loadDatabase() {
 
+                            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
 
+                            const response = await fetch("kerttervezo.db");
+                            const buffer = await response.arrayBuffer();
+                            const db = new SQL.Database(new Uint8Array(buffer));
 
-
+                            const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
+                            div2.remove();
+                            let div4 = document.createElement("div");
+                            div4.id = "kozep3";
                         
+                                    
+                            let novenyekLista = [];
+                            results[0].values.forEach(row => {
+                                let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
+                                novenyekLista.push(noveny);
+                            });
+                            
+                            for(let i = 0; i < results[0].values.length; i++){
+                                let button = document.createElement("button");
+                                button.className = "gomb";
+                                button.innerHTML = `<img src="${novenyekLista[i].kep}" width="90%" >`;
+                                /*document.querySelector(".gomb").addEventListener("click", function() {
+                                    this.classList.toggle("active");
+                                });*/
+
+                                /*button.addEventListener("click", function(){
+                                    this.classList.toggle("active");
+                                });*/
+                                  // Visszaállítjuk az állapotot sessionStorage alapján
+                                if (sessionStorage.getItem(`gomb_${i}`) === "active") {
+                                    button.classList.add("active");
+                                }
+
+                                button.addEventListener("click", function () {
+                                    if (this.classList.contains("active")) {
+                                        this.classList.remove("active");
+                                        localStorage.removeItem(`gomb_${i}`); // Töröljük a tárolt állapotot
+                                    } else {
+                                        this.classList.add("active");
+                                        localStorage.setItem(`gomb_${i}`, "active"); // Tároljuk az aktív állapotot
+                                    }
+                                });
+                                div4.appendChild(button);
+                                document.body.appendChild(div4);
+                                
+                            }
+
+                            let button2 = document.createElement("button");
+                            button2.id = "kuldes3";
+                            button2.textContent = "Tovább";
+                            div4.appendChild(button2);
+                            kuldes3.addEventListener("click", function(event){
+                                event.preventDefault();
+                                div4.remove();
+                                let div5 = document.createElement("div");
+                                div5.id = "kozep4";
+                                let p = document.createElement("p");
+                                for(let i = 0; i < results[0].values.length; i++){
+                                    if(localStorage.getItem(`gomb_${i}`) === "active"){
+                                        p.innerHTML += `<p>${novenyekLista[i].magyar}</p>` + "<br>";
+                                        div5.appendChild(p);
+                                        document.body.appendChild(div5);
+                                    }
+                                }                        
+                            });
+
+                        }
+                        loadDatabase();
                     }
                 })
             }
