@@ -207,7 +207,6 @@ li {
 
 }
 
-
 #kozep button, #kozep2 button{
     cursor: pointer;
     background-color: #123524;
@@ -259,4 +258,8 @@ input[type=number]:active, input[type=number]:focus{
     font-size: 9pt;
     text-align: center;
     margin-top: 8px;
+
+img{
+    image-rendering: pixelated;
+
 }
