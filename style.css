@@ -5,6 +5,12 @@
     #3E7B27
     #85A947
     #EFE3C2
+
+
+
+Tooltip-ek: Ha az egér egy elem fölé kerül, megjelenhet egy kis magyarázó szöveg.
+Élő előnézet: Amikor a felhasználó módosítja a parcella számát, egy kis vizuális előnézet mutathatná, hogy hány parcella lesz létrehozva.
+Gomb effekt: A "Küldés" gomb nyomásakor egy kis animáció vagy színváltozás jelezhetné a visszajelzést.
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
@@ -23,6 +29,7 @@ body {
     background-repeat: repeat-y, repeat-y;
     background-position: left, right;
     background-size: 5%;
+    overflow-y: auto;
 
     
 
@@ -37,14 +44,18 @@ body {
     height: 80px;
     border-bottom: #3E7B27 15px solid;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
+    margin-bottom: 100px;
+    position: fixed;
+    top: 0;
+
 }
 
 #footer{
-    /*background-color: #123524;
+    background-color: #123524;
     width: 100%;
     height: 80px;
-    border-bottom: #3E7B27 15px solid;
-    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);*/
+    border-top: #3E7B27 15px solid;
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
 }
 
 #oldalnev{
@@ -171,6 +182,8 @@ li {
     animation: fadeIn 0.8s ease-in-out;
     max-width: 70%;
     flex-wrap: wrap;
+    z-index: -1;
+
 }
 
 .gomb{
@@ -198,7 +211,41 @@ li {
     background-color: #3E7B27;
     color: #EFE3C2;
     transition: 0.3s;
+    z-index: 9999;
+   
 }
+
+
+
+
+.gomb::after {
+    content: attr(data-info); /* A gomb "data-info" attribútumának tartalmát használja */
+    position: absolute;
+    left: 100%; /* A gomb mellett jelenik meg */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    white-space: nowrap;
+    font-size: 14px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s linear 1s;
+    z-index: 9999;
+   /* transition: opacity 0.5s linear 1s, visibility 0 linear 0;*/
+    pointer-events: none; /* Ne akadályozza a kattintást: none*/
+}
+
+.gomb:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.5s;
+    z-index: 9999
+
+}
+
 
 .gomb.active{
     background-color: #3e8e41;
@@ -207,7 +254,16 @@ li {
 
 }
 
-#kozep button, #kozep2 button{
+
+
+button:hover{
+    background-color: rgb(17, 87, 17);
+    color: rgb(231, 223, 223);
+    transform: scale(1.05);
+    
+}
+
+#kuldes1, #kuldes2, #kuldes3{
     cursor: pointer;
     background-color: #123524;
     color: white;
@@ -217,12 +273,13 @@ li {
     margin: 10px;
 }
 
-button:hover{
+#kuldes1:hover, #kuldes2:hover, #kuldes3:hover{
     background-color: rgb(17, 87, 17);
     color: rgb(231, 223, 223);
     transform: scale(1.05);
     
 }
+
 
 
 input[type=number]{
