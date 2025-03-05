@@ -5,6 +5,12 @@
     #3E7B27
     #85A947
     #EFE3C2
+
+
+
+Tooltip-ek: Ha az egér egy elem fölé kerül, megjelenhet egy kis magyarázó szöveg.
+Élő előnézet: Amikor a felhasználó módosítja a parcella számát, egy kis vizuális előnézet mutathatná, hogy hány parcella lesz létrehozva.
+Gomb effekt: A "Küldés" gomb nyomásakor egy kis animáció vagy színváltozás jelezhetné a visszajelzést.
 */
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap');
@@ -37,14 +43,16 @@ body {
     height: 80px;
     border-bottom: #3E7B27 15px solid;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
+    position: sticky;
+
 }
 
 #footer{
-    /*background-color: #123524;
+    background-color: #123524;
     width: 100%;
     height: 80px;
-    border-bottom: #3E7B27 15px solid;
-    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);*/
+    border-top: #3E7B27 15px solid;
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
 }
 
 #oldalnev{
@@ -171,6 +179,8 @@ li {
     animation: fadeIn 0.8s ease-in-out;
     max-width: 70%;
     flex-wrap: wrap;
+    overflow: hidden;
+    z-index: -1;
 }
 
 .gomb{
