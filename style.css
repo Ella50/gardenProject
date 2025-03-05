@@ -172,7 +172,7 @@ li {
     vertical-align: middle;
     justify-content: center;
     align-items: center;
-    display: flex;
+    display: inline-block;
     border: #3E7B27 15px solid;
     background-color: #85A947;
     padding: 30px;

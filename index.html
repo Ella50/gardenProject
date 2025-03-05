@@ -63,26 +63,16 @@
 
             }
         }
-        /*const sqlite = require('sqlite3').verbose();
-
-        const db = new sqlite3.Database('./kerttervezo.db', (err) => {
-            if (err) {
-                console.error('Hiba az adatbázis csatlakozásnál:', err.message);
-            } else {
-                console.log('Sikeresen csatlakoztál az SQLite adatbázishoz!');
-            }
-        });*/
+        
 
         async function loadDatabase() {
-            // SQLite.js betöltése
+          
             const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
 
-            // Adatbázis fájl betöltése
             const response = await fetch("kerttervezo.db");
             const buffer = await response.arrayBuffer();
             const db = new SQL.Database(new Uint8Array(buffer));
 
-            //Növények tábla listája + a táblázat
             const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
             
             let table = document.getElementById("novenyekTable");
@@ -90,10 +80,6 @@
             let novenyekLista = [];
 
             results[0].values.forEach(row => {
-                /*let tr = document.createElement("tr");
-                tr.innerHTML = `<td><img src="${row[5]}"></td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}cm</td><td>${row[4]}cm</td><td><input type="number" id="mennyiseg" name="mennyiseg" min="1" max="100" value="0"></td>`;
-                table.appendChild(tr);*/
-
                 let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
                 novenyekLista.push(noveny);
             });
@@ -244,14 +230,6 @@
                                 button.className = "gomb";
                                 button.setAttribute("data-info", `${novenyekLista[i].magyar}`); /*-----------------------------------*/
                                 button.innerHTML = `<img src="${novenyekLista[i].kep}" width="90%" >`;
-                                /*document.querySelector(".gomb").addEventListener("click", function() {
-                                    this.classList.toggle("active");
-                                });*/
-
-                                /*button.addEventListener("click", function(){
-                                    this.classList.toggle("active");
-                                });*/
-                                  // Visszaállítjuk az állapotot sessionStorage alapján
                                 if (localStorage.getItem(`gomb_${i}`) === "active") {
                                     button.classList.add("active");
                                 }
@@ -280,23 +258,75 @@
                                 div4.remove();
                                 let div5 = document.createElement("div");
                                 div5.id = "kozep4";
-                                let p = document.createElement("p");
+                                
+                                
+                                
                                 for(let i = 0; i < results[0].values.length; i++){
+                                    let table = document.createElement("table");
+                                    table.id = "valasztoTable";
                                     if(localStorage.getItem(`gomb_${i}`) === "active"){
-                                        p.innerHTML += `<p>${novenyekLista[i].magyar} -> `;
                                         for(let j = 0; j < results3[0].values.length; j++){
+                                            let data = {
+                                                "Alma": ["fajta1", "fajta2"],
+                                                "Répa": ["fajta1", "fajta2"]
+                                            };
+
+                                            // Táblázat feltöltése
+                                            for (let key in data) {
+                                                let rowSpan = data[key].length;
+
+                                                data[key].forEach((fajta, index) => {
+                                                    let row = document.createElement("tr");
+
+                                                    // Csak az első iterációban adjuk hozzá a növény nevét
+                                                    if (index === 0) {
+                                                        let cell = document.createElement("td");
+                                                        cell.rowSpan = rowSpan;
+                                                        cell.textContent = key;
+                                                        row.appendChild(cell);
+                                                    }
+
+                                                    // Minden iterációnál hozzáadjuk a fajta cellát
+                                                    let fajtaCell = document.createElement("td");
+                                                    fajtaCell.textContent = fajta;
+                                                    row.appendChild(fajtaCell);
+
+                                                    // Sor hozzáadása a táblázathoz
+                                                    table.appendChild(row);
+                                                    div5.appendChild(table);
+                                                });
+                                            }                          
+                                        }
+
+                               
+                                        /*for(let j = 0; j < results3[0].values.length; j++){
                                             if(novenyekLista[i].id == fajtaLista[j].novenyek_id){
-                                            p.innerHTML += `${fajtaLista[j].nev}`;
-                                            div5.appendChild(p);
-                                        }
-                                        }
+                                                for(let novenyek_id in fajtaLista[j].novenyek_id){
+                                                    let rowspan = fajtaLista[j].novenyek_id[novenyek_id].length;
+                                                    console.log(rowspan);
+                                                    fajtaLista[j].novenyek_id[novenyek_id].forEach((fajta, index) => {
+                                                        let row = document.createElement("tr")
+                                                        if (index === 0) {
+                                                            let cell = document.createElement("td");
+                                                            cell.rowSpan = rowSpan;
+                                                            cell.textContent = key;
+                                                            row.appendChild(cell);
+                                                        }
+                                                        let fajtaCell = document.createElement("td");
+                                                        fajtaCell.textContent = fajta;
+                                                        row.appendChild(fajtaCell);
+                                                        table.appendChild(row);
+                                                    });
+                                                }
+                                                div5.appendChild(table); 
+                                            }   
+                                        }*/  
+                                    
                                         
-                                        /*p.innerHTML += `<p>${novenyekLista[i].magyar} </p> `+  "<br>";
-                                        div5.appendChild(p);*/
-                                        console.log(i)
-                                        
+                                    console.log(i)
+                                    
                                     }
-                                }     
+                                }
                                 document.body.appendChild(div5);                   
                             });
 
