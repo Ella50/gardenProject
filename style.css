@@ -206,3 +206,7 @@ li {
     transform: translateY(4px);
 
 }
+
+img{
+    image-rendering: pixelated;
+}

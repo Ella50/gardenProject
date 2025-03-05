@@ -56,10 +56,10 @@
             }
         }
         class Fajta {
-            constructor(id, nev, noveny_id) {
+            constructor(id, nev, novenyek_id) {
                 this.id = id;
                 this.nev = nev;
-                this.noveny_id = noveny_id;
+                this.novenyek_id = novenyek_id;
   
             }
         }
@@ -219,6 +219,14 @@
                             const buffer = await response.arrayBuffer();
                             const db = new SQL.Database(new Uint8Array(buffer));
 
+                            const results3 = db.exec("SELECT id, nev, novenyek_id FROM fajta");
+
+                            let fajtaLista = [];
+                            results3[0].values.forEach(row => {
+                                let faj = new Fajta(row[0], row[1], row[2]);
+                                fajtaLista.push(faj);
+                            });
+
                             const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
                             div2.remove();
                             let div4 = document.createElement("div");
@@ -260,7 +268,8 @@
                                 document.body.appendChild(div4);
                                 
                             }
-
+                            let br3 = document.createElement("br");
+                            div4.appendChild(br3);
                             let button2 = document.createElement("button");
                             button2.id = "kuldes3";
                             button2.textContent = "Tovább";
@@ -273,11 +282,21 @@
                                 let p = document.createElement("p");
                                 for(let i = 0; i < results[0].values.length; i++){
                                     if(localStorage.getItem(`gomb_${i}`) === "active"){
-                                        p.innerHTML += `<p>${novenyekLista[i].magyar}</p>` + "<br>";
-                                        div5.appendChild(p);
-                                        document.body.appendChild(div5);
+                                        p.innerHTML += `<p>${novenyekLista[i].magyar} -> `;
+                                        for(let j = 0; j < results3[0].values.length; j++){
+                                            if(novenyekLista[i].id == fajtaLista[j].novenyek_id){
+                                            p.innerHTML += `${fajtaLista[j].nev}`;
+                                            div5.appendChild(p);
+                                        }
+                                        }
+                                        
+                                        /*p.innerHTML += `<p>${novenyekLista[i].magyar} </p> `+  "<br>";
+                                        div5.appendChild(p);*/
+                                        console.log(i)
+                                        
                                     }
-                                }                        
+                                }     
+                                document.body.appendChild(div5);                   
                             });
 
                         }
