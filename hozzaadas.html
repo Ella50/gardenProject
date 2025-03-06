@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerttervező</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+    <link rel="icon" type="image/x-icon" href="\novenyek/favicon.png">
+
+
+    <style>
+
+        table {
+            width: 60%;
+            margin: auto;
+            margin-bottom: 100px;
+            border-collapse: collapse;
+ 
+
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+
+        }
+        img {
+            width: 20px;
+            height: 20px;
+        }
+
+        #hozzaadasa{
+            width: 70%;
+            margin: auto;
+            margin-top: 100px;
+            margin-bottom: 50px;
+
+            text-align: center;
+            vertical-align: middle;
+            justify-content: center;
+            align-items: center;
+
+            background-color:#85A947;
+            border: #3E7B27 15px solid;
+            padding: 30px;
+            box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+
+        }
+        input[type=number]{
+            width: 130px;
+        }
+        input[type=color]{
+            width: 100px;
+            height: 40px;
+        }
+
+    </style>
+
+
+</head>
+<body>
+    <div id="top" class="">
+
+        <h5 id="tervezes" onclick="location.reload()"> <a href="index.html" style="text-decoration: none;     color: rgb(243, 233, 233);">Tervezés</a></h5>
+        <h5 id="hozzaadas"> <a href="hozzaadas.html" style="text-decoration: none;     color: rgb(243, 233, 233);">Hozzáadás</a></h5>
+
+        <h3 id="oldalnev">Kerttervező</h3>
+
+
+    </div>
+
+
+
+    <div id="hozzaadasa">
+        <h2>Új növény hozzáadása</h2>
+        <form id="novenyForm">
+        <label>Magyar név: <input type="text" id="magyarNev" required></label><br>
+        <label>Latin név: <input type="text" id="latinNev"></label><br>
+        <label>Sor távolság (cm): <input type="number" id="sorTav" min="1" required></label><br>
+        <label>Tő távolság (cm): <input type="number" id="toTav"min="1" required></label><br>
+        <label>Szín választás: <input type="color" id="kep" name="color" required></label><br>
+        
+        <button type="submit" id="hozza">Hozzáadás</button>
+    </form>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Kép</th>
+                <th>Magyar név</th>
+                <th>Latin név</th>
+                <th>Sor távolság</th>
+                <th>Tő távolság</th>
+                <th>Törlés</th>
+
+            </tr>
+        </thead>
+        <tbody id="novenyekTable"></tbody>
+    </table>
+
+   <!--Ha a növeny[i].kep nem tartalmaz '.png'-t, vagyis egy színkód, akkor a színkód legyen a képe
+
+
+    <input type="text" id="kepUrl">-->
+
+    <script>
+        class Noveny {
+            constructor(id, magyar, latin, sor_tav, to_tav, kep) {
+                this.id = id;
+                this.magyar = magyar;
+                this.latin = latin;
+                this.sor_tav = sor_tav;
+                this.to_tav = to_tav;
+                this.kep = kep;
+            }
+
+           /* renderRow(index) { //ezzel működik, csak a színkódot nem érti
+
+                return `
+                    <tr>
+                        <td><img src="${this.kep}" alt="${this.magyar}"></td>
+                        <td>${this.magyar}</td>
+                        <td>${this.latin}</td>
+                        <td>${this.sor_tav} cm</td>
+                        <td>${this.to_tav} cm</td>
+                        <td><button onclick="torolNoveny(${index})">🗑️</button></td>
+                    </tr>
+                `;
+            }*/
+            renderRow(index) { //nem működik
+                let ikon = this.kep;
+                if(ikon.includes(".png") == true)
+                {
+                    return `
+                    <tr>
+                        <td><img src="${this.kep}" alt="${this.magyar}"></td>
+                        <td>${this.magyar}</td>
+                        <td>${this.latin}</td>
+                        <td>${this.sor_tav} cm</td>
+                        <td>${this.to_tav} cm</td>
+                        <td><button onclick="torolNoveny(${index})">🗑️</button></td>
+                    </tr>
+                `;
+
+                }
+                else{
+                    return `
+                    <tr>
+                        <td><div style="background-color:${this.kep};"></div></td>
+                        <td>${this.magyar}</td>
+                        <td>${this.latin}</td>
+                        <td>${this.sor_tav} cm</td>
+                        <td>${this.to_tav} cm</td>
+                        <td><button onclick="torolNoveny(${index})">🗑️</button></td>
+                    </tr>
+                `;
+                }
+
+                
+            }
+        }
+
+        let db;
+        let novenyekLista = [];
+
+        async function loadDatabase() {
+            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
+
+            const response = await fetch("kerttervezo.db");
+            const buffer = await response.arrayBuffer();
+            db = new SQL.Database(new Uint8Array(buffer));
+
+            loadTable();
+        }
+
+        function loadTable() {
+            const results = db.exec("SELECT magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
+            let adatbazisNovenyek = results[0].values.map(row => new Noveny(Date.now(), row[0], row[1], row[2], row[3], row[4]));
+
+            // Betöltjük a localStorage adatait
+            const localData = JSON.parse(localStorage.getItem("novenyek")) || [];
+
+            // Összefésüljük az adatokat úgy, hogy ne legyenek duplikációk
+            const uniqueNovenyek = [...adatbazisNovenyek];
+
+            localData.forEach(localNoveny => {
+                let alreadyExists = uniqueNovenyek.some(n => n.magyar === localNoveny.magyar);
+                if (!alreadyExists) {
+                    uniqueNovenyek.push(new Noveny(localNoveny.id, localNoveny.magyar, localNoveny.latin, localNoveny.sor_tav, localNoveny.to_tav, localNoveny.kep));
+                }
+            });
+
+            novenyekLista = uniqueNovenyek;
+            renderTable();
+        }   
+
+
+
+        function renderTable() {
+            let table = document.getElementById("novenyekTable");
+            table.innerHTML = novenyekLista.map((noveny, index) => noveny.renderRow(index)).join("");
+        }
+
+
+        document.getElementById("novenyForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let magyarNev = document.getElementById("magyarNev").value;
+            let latinNev = document.getElementById("latinNev").value;
+            let sorTav = document.getElementById("sorTav").value;
+            let toTav = document.getElementById("toTav").value;
+            let kep = document.getElementById("kep").value;
+
+            let ujNoveny = new Noveny(Date.now(), magyarNev, latinNev, sorTav, toTav, kep);
+            novenyekLista.push(ujNoveny);
+
+            // Elmentjük localStorage-ba
+            localStorage.setItem("novenyek", JSON.stringify(novenyekLista.filter(n => n.id > 0)));
+
+            renderTable();
+
+            console.log(kep);
+        });
+
+        function torolNoveny(index) {
+            if (confirm("Biztosan törlöd ezt a növényt?")) {
+                // Eltávolítjuk a növényt a listából
+                novenyekLista.splice(index, 1);
+
+                // Frissítjük a localStorage-t
+                localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
+
+                // Újrarajzoljuk a táblázatot
+                renderTable();
+            }
+        }
+
+        loadDatabase();
+    </script>
+
+
+
+
+    <div id="footer">
+        <p>© 2025</p>
+    </div>
+
+
+</body>
+</html>

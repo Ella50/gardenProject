@@ -46,8 +46,6 @@ body {
 
 }
 
-
-
 #oldalnev{
     color: rgb(243, 233, 233);
     text-align: center;
@@ -57,7 +55,44 @@ body {
     text-transform: uppercase;
     font-weight: lighter;
     letter-spacing: 1.5px;
+
 }
+
+#tervezes{
+    color: rgb(243, 233, 233);
+    text-align: center;
+    margin-right: auto;
+    float: left;
+    vertical-align: middle;
+    padding: 20px;
+    text-transform: uppercase;
+    font-weight: lighter;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+
+    transition: transform 0.3s;
+}
+
+#tervezes:hover, #hozzaadas:hover{
+    transform: scale(1.05);
+}
+
+#hozzaadas{
+    color: rgb(243, 233, 233);
+    text-align: center;
+    margin-left: auto;
+    float: right;
+    vertical-align: middle;
+    padding: 20px;
+    text-transform: uppercase;
+    font-weight: lighter;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: transform 0.3s;
+
+}
+
+
 
 
 h1{
@@ -271,7 +306,7 @@ button:hover{
     
 }
 
-#kuldes1, #kuldes2, #kuldes3{
+#kuldes1, #kuldes2, #kuldes3, #hozza{
     cursor: pointer;
     background-color: #123524;
     color: white;
@@ -281,7 +316,7 @@ button:hover{
     margin: 10px;
 }
 
-#kuldes1:hover, #kuldes2:hover, #kuldes3:hover{
+#kuldes1:hover, #kuldes2:hover, #kuldes3:hover, #hozza:hover{
     background-color: rgb(17, 87, 17);
     color: rgb(231, 223, 223);
     transform: scale(1.05);
@@ -290,7 +325,7 @@ button:hover{
 
 
 
-input[type=number]{
+input[type=number], input[type=text], input[type=color]{
     background-color: #a7cc66;
     margin-left: 10px;
     border: 0.5px solid #123524;
