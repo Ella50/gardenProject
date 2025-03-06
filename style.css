@@ -31,11 +31,6 @@ body {
     background-size: 5%;
     overflow-y: auto;
 
-    
-
-
-
-
 }
 
 #top{
@@ -44,19 +39,14 @@ body {
     height: 80px;
     border-bottom: #3E7B27 15px solid;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
-    margin-bottom: 100px;
-    position: fixed;
+    /*margin-bottom: 100px;*/
+    /*position: fixed;*/
     top: 0;
+    margin-bottom: 10px;
 
 }
 
-#footer{
-    background-color: #123524;
-    width: 100%;
-    height: 80px;
-    border-top: #3E7B27 15px solid;
-    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
-}
+
 
 #oldalnev{
     color: rgb(243, 233, 233);
@@ -134,11 +124,14 @@ li {
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     animation: fadeIn 0.8s ease-in-out;
+    
+   
 }
 
 #kozep3{
     width: auto;
     height: auto;
+    margin: auto;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -161,18 +154,36 @@ li {
 }
 
 #kozep4{
+    /*top: 50%;
+    left: 50%;
     width: auto;
     height: auto;
-    position: absolute;
+    margin: auto;
+    text-align: center;
+    vertical-align: middle;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+    border: #3E7B27 15px solid;
+    background-color: #85A947;
+    padding: 30px;
+    box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
+    box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    max-width: 45%;*/
+    width: auto;
+    height: auto;
+    margin: auto;
+    /*position: absolute;*/
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    /*transform: translate(-50%, -50%);*/
     text-align: center;
     line-height: 200%;
     vertical-align: middle;
     justify-content: center;
     align-items: center;
-    display: inline-block;
+    display: flex;
     border: #3E7B27 15px solid;
     background-color: #85A947;
     padding: 30px;
@@ -180,10 +191,7 @@ li {
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     animation: fadeIn 0.8s ease-in-out;
-    max-width: 70%;
-    flex-wrap: wrap;
-    z-index: -1;
-
+    max-width: 40%;
 }
 
 .gomb{
@@ -308,6 +316,8 @@ input[type=number]:active, input[type=number]:focus{
     box-shadow: 10px -10px 26px -1px rgba(0, 0, 0, 0.226);
     position: fixed;
     bottom: 0;
+
+    
 }
 
 #footer p {
