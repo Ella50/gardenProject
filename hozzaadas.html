@@ -82,7 +82,9 @@
         <label>Latin név: <input type="text" id="latinNev"></label><br>
         <label>Sor távolság (cm): <input type="number" id="sorTav" min="1" required></label><br>
         <label>Tő távolság (cm): <input type="number" id="toTav"min="1" required></label><br>
-        <label>Szín választás: <input type="color" id="kep" name="color" required></label><br>
+
+        <label>Szín választás: <input type="color" id="novenySzin" name="color" required></label><br>
+
         
         <button type="submit" id="hozza">Hozzáadás</button>
     </form>
@@ -109,15 +111,34 @@
     <input type="text" id="kepUrl">-->
 
     <script>
-        class Noveny {
-            constructor(id, magyar, latin, sor_tav, to_tav, kep) {
-                this.id = id;
-                this.magyar = magyar;
-                this.latin = latin;
-                this.sor_tav = sor_tav;
-                this.to_tav = to_tav;
-                this.kep = kep;
-            }
+       class Noveny {
+    constructor(id, magyar, latin, sor_tav, to_tav, kep, szin) {
+        this.id = id;
+        this.magyar = magyar;
+        this.latin = latin;
+        this.sor_tav = sor_tav;
+        this.to_tav = to_tav;
+        this.kep = kep || null;
+        this.szin = szin || "#cccccc";  // Alapértelmezett szín, ha nincs megadva
+    }
+
+            renderRow(index) {
+            let imgContent = (this.kep && this.kep.includes('.png')) 
+                ? `<img src="${this.kep}" alt="${this.magyar}" onerror="this.onerror=null; this.src='fallback.png';" style="width:50px; height:50px;">`
+                : `<div style="width: 50px; height: 50px; background-color: ${this.kep || '#cccccc'};"></div>`;
+
+            return `
+                <tr>
+                    <td>${imgContent}</td>
+                    <td>${this.magyar}</td>
+                    <td>${this.latin}</td>
+                    <td>${this.sor_tav} cm</td>
+                    <td>${this.to_tav} cm</td>
+                    <td><button onclick="torolNoveny(${index})">🗑️</button></td>
+                </tr>
+            `;
+        }
+       }
 
            /* renderRow(index) { //ezzel működik, csak a színkódot nem érti
 
@@ -131,39 +152,25 @@
                         <td><button onclick="torolNoveny(${index})">🗑️</button></td>
                     </tr>
                 `;
-            }*/
-            renderRow(index) { //nem működik
-                let ikon = this.kep;
-                if(ikon.includes(".png") == true)
-                {
-                    return `
-                    <tr>
-                        <td><img src="${this.kep}" alt="${this.magyar}"></td>
-                        <td>${this.magyar}</td>
-                        <td>${this.latin}</td>
-                        <td>${this.sor_tav} cm</td>
-                        <td>${this.to_tav} cm</td>
-                        <td><button onclick="torolNoveny(${index})">🗑️</button></td>
-                    </tr>
-                `;
-
-                }
-                else{
-                    return `
-                    <tr>
-                        <td><div style="background-color:${this.kep};"></div></td>
-                        <td>${this.magyar}</td>
-                        <td>${this.latin}</td>
-                        <td>${this.sor_tav} cm</td>
-                        <td>${this.to_tav} cm</td>
-                        <td><button onclick="torolNoveny(${index})">🗑️</button></td>
-                    </tr>
-                `;
-                }
-
-                
             }
-        }
+            renderRow(index) {
+                let imgContent = this.kep && this.kep.trim() !== ""
+        ? `<img src="${this.kep}" alt="${this.magyar}" onerror="this.onerror=null; this.src='fallback.png';">`
+        : `<div style="width: 50px; height: 50px; background-color: ${this.szin || 'gray'};"></div>`;
+
+
+                return `
+                    <tr>
+                        <td>${imgContent}</td>
+                        <td>${this.magyar}</td>
+                        <td>${this.latin}</td>
+                        <td>${this.sor_tav} cm</td>
+                        <td>${this.to_tav} cm</td>
+                        <td><button onclick="torolNoveny(${index})">🗑️</button></td>
+                    </tr>
+                `;
+            }
+        }*/
 
         let db;
         let novenyekLista = [];
@@ -179,26 +186,25 @@
         }
 
         function loadTable() {
-            const results = db.exec("SELECT magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
-            let adatbazisNovenyek = results[0].values.map(row => new Noveny(Date.now(), row[0], row[1], row[2], row[3], row[4]));
+            const results = db.exec("SELECT magyar_nev, latin_nev, sor_tav, to_tav, kep, szin FROM novenyek");
+            let adatbazisNovenyek = results[0].values.map(row => 
+                new Noveny(Date.now(), row[0], row[1], row[2], row[3], row[4], row[5] || "#cccccc")
+            );
 
-            // Betöltjük a localStorage adatait
             const localData = JSON.parse(localStorage.getItem("novenyek")) || [];
 
-            // Összefésüljük az adatokat úgy, hogy ne legyenek duplikációk
             const uniqueNovenyek = [...adatbazisNovenyek];
 
             localData.forEach(localNoveny => {
                 let alreadyExists = uniqueNovenyek.some(n => n.magyar === localNoveny.magyar);
                 if (!alreadyExists) {
-                    uniqueNovenyek.push(new Noveny(localNoveny.id, localNoveny.magyar, localNoveny.latin, localNoveny.sor_tav, localNoveny.to_tav, localNoveny.kep));
+                    uniqueNovenyek.push(new Noveny(localNoveny.id, localNoveny.magyar, localNoveny.latin, localNoveny.sor_tav, localNoveny.to_tav, localNoveny.kep, localNoveny.szin));
                 }
             });
 
             novenyekLista = uniqueNovenyek;
             renderTable();
-        }   
-
+        }
 
 
         function renderTable() {
@@ -207,39 +213,49 @@
         }
 
 
-        document.getElementById("novenyForm").addEventListener("submit", function(event) {
+                document.getElementById("novenyForm").addEventListener("submit", function(event) {
             event.preventDefault();
 
             let magyarNev = document.getElementById("magyarNev").value;
             let latinNev = document.getElementById("latinNev").value;
             let sorTav = document.getElementById("sorTav").value;
             let toTav = document.getElementById("toTav").value;
-            let kep = document.getElementById("kep").value;
 
-            let ujNoveny = new Noveny(Date.now(), magyarNev, latinNev, sorTav, toTav, kep);
+            let szin = document.getElementById("novenySzin").value.trim();
+
+            // Ha nincs kép megadva, akkor a szín legyen az érték
+            let finalKep = kep ? kep : szin;
+
+            let ujNoveny = new Noveny(Date.now(), magyarNev, latinNev, sorTav, toTav, finalKep, szin);
             novenyekLista.push(ujNoveny);
 
-            // Elmentjük localStorage-ba
-            localStorage.setItem("novenyek", JSON.stringify(novenyekLista.filter(n => n.id > 0)));
+            // Mentés localStorage-ba
+            localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
 
             renderTable();
+});
 
-            console.log(kep);
-        });
-
-        function torolNoveny(index) {
+       /* function torolNoveny(index) {
             if (confirm("Biztosan törlöd ezt a növényt?")) {
-                // Eltávolítjuk a növényt a listából
+                
                 novenyekLista.splice(index, 1);
 
-                // Frissítjük a localStorage-t
+               
                 localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
 
-                // Újrarajzoljuk a táblázatot
+                
                 renderTable();
             }
-        }
+        }*/
+                    function torolNoveny(index) {
+                if (confirm("Biztosan törlöd ezt a növényt?")) {
+                    novenyekLista.splice(index, 1);
+                    localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
+                    renderTable();
+                }
+            }
 
+            
         loadDatabase();
     </script>
 
