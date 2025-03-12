@@ -12,14 +12,16 @@
 <body>
     <div id="top" class="">
 
-        <h5 id="tervezes" onclick="location.reload()"> <a href="probaindex.html" style="text-decoration: none;     color: rgb(243, 233, 233);">Tervezés</a></h5>
-        <h5 id="hozzaadas"> <a href="probahozzaad.html" style="text-decoration: none; color: rgb(243, 233, 233);">Hozzáadás</a></h5>
+        <h5 id="tervezes"> <a href="probaindex.html" style="text-decoration: none;     color: rgb(243, 233, 233);">Tervezés</a></h5>
+        <h5 id="hozzaadas"> <a href="hozzaadas.html" style="text-decoration: none; color: rgb(243, 233, 233);">Hozzáadás</a></h5>
 
         <h3 id="oldalnev">Kerttervező</h3>
 
 
     </div>
 
+    <div id="gombokContainer"></div>
+    <button id="gombokLegyenek" onclick="gombokMost()">GOMBOK</button>
 
     <table id="novenyekTable">
 
@@ -62,7 +64,7 @@
 
 
 
-document.addEventListener("DOMContentLoaded", function() {
+/*document.addEventListener("DOMContentLoaded", function() {
     // Get the query parameters from the URL
     const urlParams = new URLSearchParams(window.location.search);
     const novenyekListaJSON = urlParams.get("novenyek");
@@ -72,7 +74,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Render the plants in the table
     renderTable(novenyekLista);
-});
+});*/
+
+class HozzaNoveny {
+    constructor(id, magyar, latin, sor_tav, to_tav, kep) {
+        this.id = id;
+        this.magyar = magyar;
+        this.latin = latin;
+        this.sor_tav = sor_tav;
+        this.to_tav = to_tav;
+        this.kep = kep;
+    }
+}
+
+let HozzanovenyekLista = [];
 
 function renderTable(novenyekLista) {
     let table = document.getElementById("novenyekTable");
@@ -80,16 +95,6 @@ function renderTable(novenyekLista) {
 
     // Clear the existing table content
     table.innerHTML = "";
-
-    // Add table headers
-    const headers = ["Kép", "Magyar név", "Latin név", "Sor távolság", "Tő távolság", "Törlés"];
-    const headerRow = document.createElement("tr");
-    headers.forEach(headerText => {
-        const th = document.createElement("th");
-        th.textContent = headerText;
-        headerRow.appendChild(th);
-    });
-    table.appendChild(headerRow);
 
     // Add table rows for each plant
     novenyekLista.forEach((noveny, index) => {
@@ -125,43 +130,96 @@ function renderTable(novenyekLista) {
 
         // Sor távolság
         const sorTavCell = document.createElement("td");
-        sorTavCell.textContent = `${noveny.sor_tav} cm`;
+        sorTavCell.textContent = `${noveny.sor_tav}`;
         row.appendChild(sorTavCell);
 
         // Tő távolság
         const toTavCell = document.createElement("td");
-        toTavCell.textContent = `${noveny.to_tav} cm`;
+        toTavCell.textContent = `${noveny.to_tav}`;
         row.appendChild(toTavCell);
-
-        // Törlés gomb
-        const deleteCell = document.createElement("td");
-        const deleteButton = document.createElement("button");
-        deleteButton.textContent = "🗑️";
-        deleteButton.onclick = () => torolNoveny(index);
-        deleteCell.appendChild(deleteButton);
-        row.appendChild(deleteCell);
 
         // Add the row to the table
         table.appendChild(row);
+
+        // Add to HozzanovenyekLista
+        const ujNoveny = new HozzaNoveny(
+            index + 1, // ID
+            noveny.magyar,
+            noveny.latin,
+            noveny.sor_tav,
+            noveny.to_tav,
+            noveny.kep || noveny.szin
+        );
+        HozzanovenyekLista.push(ujNoveny);
     });
+
+    console.log(HozzanovenyekLista[22].kep);
 }
 
+// Load data from localStorage and render the table
+document.addEventListener("DOMContentLoaded", function () {
+    const novenyek = JSON.parse(localStorage.getItem("novenyek")) || [];
+    renderTable(novenyek);
+});
+function gombokMost() {
+    let selectedNovenyek = [];
 
-/*
-function renderTable(novenyekLista) {
-    let table = document.getElementById("novenyekTable");
-    table.innerHTML = novenyekLista.map((noveny, index) => noveny.renderRow(index)).join("");
+    // Load previously selected buttons from sessionStorage
+    for (let i = 0; i < HozzanovenyekLista.length; i++) {
+        if (sessionStorage.getItem(`gomb_${HozzanovenyekLista[i].id}`) === "active") {
+            selectedNovenyek.push(HozzanovenyekLista[i].id);
+        }
+    }
+
+    // Create buttons for each plant
+    for (let i = 0; i < HozzanovenyekLista.length; i++) {
+        let noveny = HozzanovenyekLista[i];
+
+        // Create button
+        let button = document.createElement("button");
+        button.className = "gomb";
+        button.setAttribute("data-info", noveny.magyar);
+
+        // Set button content (image or color block)
+        if (noveny.kep && noveny.kep.includes(".png")) {
+            button.innerHTML = `<img src="${noveny.kep}" alt="${noveny.magyar}" style="width: 90%; height: auto;">`;
+        } else {
+            button.innerHTML = `<div style="background-color: ${noveny.kep}; width: 50px; height: 50px;"></div>`;
+        }
+
+        // Set initial active state
+        if (sessionStorage.getItem(`gomb_${noveny.id}`) === "active") {
+            button.classList.add("active");
+        }
+
+        // Add click event listener
+        button.addEventListener("click", function () {
+            let novenyId = noveny.id;
+
+            // Toggle active state
+            if (this.classList.contains("active")) {
+                this.classList.remove("active");
+                sessionStorage.removeItem(`gomb_${novenyId}`);
+                selectedNovenyek = selectedNovenyek.filter(id => id !== novenyId); // Remove from selected list
+            } else {
+                this.classList.add("active");
+                sessionStorage.setItem(`gomb_${novenyId}`, "active");
+                selectedNovenyek.push(novenyId); // Add to selected list
+            }
+
+            console.log("Kiválasztott növények:", selectedNovenyek);
+        });
+
+        // Append button to the container (assuming you have a container with ID "gombokContainer")
+        document.getElementById("gombokContainer").appendChild(button);
+    }
 }
+
+                            
+
+                
+
         
-
-
-document.addEventListener("DOMContentLoaded", function() {
-    // Retrieve plants from localStorage
-    const novenyekLista = JSON.parse(localStorage.getItem("novenyek")) || [];
-
-    // Render the plants in the table
-    renderTable(novenyekLista);
-});*/
     
     </script>
 
