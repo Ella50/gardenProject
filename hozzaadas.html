@@ -65,9 +65,11 @@
 
 <body>
     <div id="top">
-        <h5 id="tervezes" onclick="location.reload()"> <a href="index.html" style="text-decoration: none; color: rgb(243, 233, 233);">Tervezés</a></h5>
+        <h5 id="tervezes" onclick="navigateToIndex()"> <a href="index.html" style="text-decoration: none; color: rgb(243, 233, 233);">Tervezés</a></h5>
         <h5 id="hozzaadas"> <a href="hozzaadas.html" style="text-decoration: none; color: rgb(243, 233, 233);">Hozzáadás</a></h5>
         <h3 id="oldalnev">Kerttervező</h3>
+        
+        <button onclick="navigateToIndex()">Vissza a főoldalra</button>
     </div>
 
     <div id="hozzaadasa">
@@ -226,6 +228,16 @@ document.getElementById("novenyForm").addEventListener("submit", async function(
                 renderTable();
             }
         }
+        function navigateToIndex() {
+    // Convert the list of plants to a JSON string
+    const novenyekListaJSON = JSON.stringify(novenyekLista);
+
+    // Encode the JSON string for use in a URL
+    const encodedData = encodeURIComponent(novenyekListaJSON);
+
+    // Navigate to index.html with the data as a query parameter
+    window.location.href = `probaindex.html?novenyek=${encodedData}`;
+}
     
         loadDatabase();
     </script>
