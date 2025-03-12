@@ -61,6 +61,19 @@
 
             }
         }
+        class HozzaNoveny {
+            constructor(id, magyar, latin, sor_tav, to_tav, kep) {
+                this.id = id;
+                this.magyar = magyar;
+                this.latin = latin;
+                this.sor_tav = sor_tav;
+                this.to_tav = to_tav;
+                this.kep = kep;
+
+            }
+        }
+        let HozzanovenyekLista = [];
+        
         
 
         async function loadDatabase() {
@@ -479,6 +492,7 @@
                                             }
                                             table2.appendChild(row);
                                            }
+
                                            let rowIndex = 0;
                                            let colIndex = 0;
 
@@ -488,9 +502,12 @@
 
                                             for (let i = 0; i < mennyiseg; i++) {
                                                 const cell = table2.rows[rowIndex]?.cells[colIndex]; 
+                                                cell.classList.add("cellTooltip")
 
                                                 if (cell) {
-                                                    cell.textContent = fajtaNev; 
+                                                    /*cell.textContent = fajtaNev; ---------*/
+                                                    cell.innerHTML = `<img src="${novenyekLista[index].kep}" width="190%" title="${fajtaNev}: ${novenyekLista[index].sor_tav} cm sor táv és ${novenyekLista[index].to_tav} cm tő táv">`;
+                                                  
                                                 }
                                                 colIndex++;
                                                 if (colIndex >= input2.value) {
