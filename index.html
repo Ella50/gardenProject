@@ -266,6 +266,7 @@
                             let button2 = document.createElement("button");
                             button2.id = "kuldes3";
                             button2.textContent = "Tovább";
+                            //let input3;
                             div4.appendChild(button2);
                             kuldes3.addEventListener("click", function(event){
                                 event.preventDefault();
@@ -299,7 +300,8 @@
                                             }
 
                                             let fajtaCell = document.createElement("td");
-                                            let input3 = document.createElement("input");
+                                            input3 = document.createElement("input");
+                                            input3.classList = "input3"
                                             input3.type = "number";
                                             input3.min = "0";
                                             fajtaCell.innerHTML = fajta.nev;
@@ -309,11 +311,42 @@
                                         });
                                     }
                                 });
-                                
+
+                                let kuldes4 = document.createElement("button");
+                                kuldes4.id = "kuldes4";
+                                kuldes4.textContent = "Küldés"
+                                kuldes4.type = "submit";
+                                let br4 = document.createElement("br");
+                                 
                                 div5.appendChild(table);
+                                div5.appendChild(br4);
+                                div5.appendChild(kuldes4);
+
                                 document.body.appendChild(div5);
                                 document.body.insertBefore(div5, footer);
-                                console.log(selectedNovenyek)          
+                                console.log(selectedNovenyek)   
+                                
+                                kuldes4.addEventListener("click", function(event){
+                                    //event.preventDefault();
+                                    let db = 0;
+                                    let input3 =[... document.getElementsByClassName("input3")]
+                                    input3.forEach((e) => {db += +e.value})
+                                    console.log(db)
+                                    if(db == 0)
+                                    {
+                                        alert("Nem adott meg egyetlen egy növényfajta mennyiséget sem")
+                                    }
+                                    else{
+                                        div5.remove()
+                                        let matrix = [input1.value, input2.value]
+
+                                        for(let i = 0; i < input1.value; i++){
+                                            for(let j = 0; j < input2.value; j++){
+
+                                            }
+                                        }
+                                    }
+                                });
                             });
 
                         }
