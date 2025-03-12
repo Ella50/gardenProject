@@ -17,6 +17,7 @@ CREATE TABLE novenyek (
     sor_tav int,
     to_tav int,
     kep varchar(50),
+    szin varchar(50),
     PRIMARY KEY (id)
 );
 
@@ -93,28 +94,28 @@ VALUES
 (40, 'Heritage', 20);
 
 
-INSERT INTO novenyek (id, magyar_nev, latin_nev, sor_tav, to_tav, kep)
+INSERT INTO novenyek (id, magyar_nev, latin_nev, sor_tav, to_tav, kep, szin)
 VALUES
-(1, 'Sárgarépa', 'Daucus carota', 30, 5, 'novenyek/repa.png'),
-(2, 'Paradicsom', 'Solanum lycopersicum', 70, 30, 'novenyek/paradicsom.png'),
-(3, 'Káposzta', 'Brassica oleracea', 50, 40, 'novenyek/kaposzta.png'),
-(4, 'Brokkoli', 'Brassica oleracea var. italica', 50, 40, 'novenyek/brokkoli.png'),
-(5, 'Uborka', 'Cucumis sativus', 100, 40, 'novenyek/uborka.png'),
-(6, 'Kukorica', 'Zea mays', 75, 30, 'novenyek/kukorica.png'),
-(7, 'Fokhagyma', 'Allium sativum',30, 10, 'novenyek/fokhagyma.png'),
-(8, 'Paprika', 'Capsicum annuum', 50, 40, 'novenyek/paprika.png'),
-(9, 'Tök', 'Cucurbita pepo', 120, 90, 'novenyek/tok.png'),
-(10, 'Borsó', 'Pisom sativum', 60, 20, 'novenyek/borso.png'),
-(11, 'Padlizsán', 'Solanum melongena', 60, 40, 'novenyek/padlizsan.png'),
-(12, 'Cékla', 'Beta vulgaris', 30, 8, 'novenyek/cekla.png'),
-(13, 'Retek', 'Raphanus sativus', 20, 5, 'novenyek/retek.png'),
-(14, 'Spenót', 'Spinicia oleracea', 30, 5, 'novenyek/spenot.png'),
-(15, 'Bab', 'Vicia faba', 50, 15, 'novenyek/bab.png'),
-(16, 'Búza', 'Triticum aestivum', 30, 5, 'novenyek/buza.png'),
-(17, 'Burgonya', 'Solanum tuberosum', 75, 30, 'novenyek/burgonya.png'),
-(18, 'Mogyoró', 'Corylus avellana', 400, 300, 'novenyek/mogyoro.png'),
-(19, 'Almafa', 'Malus domestica', 300, 300, 'novenyek/alma.png'),
-(20, 'Málna', 'Rubus idaeus', 200, 40, 'novenyek/malna.png');
+(1, 'Sárgarépa', 'Daucus carota', 30, 5, 'novenyek/repa.png', '#5c705f'),
+(2, 'Paradicsom', 'Solanum lycopersicum', 70, 30, 'novenyek/paradicsom.png', '#5c705f'),
+(3, 'Káposzta', 'Brassica oleracea', 50, 40, 'novenyek/kaposzta.png', '#5c705f'),
+(4, 'Brokkoli', 'Brassica oleracea var. italica', 50, 40, 'novenyek/brokkoli.png', '#5c705f'),
+(5, 'Uborka', 'Cucumis sativus', 100, 40, 'novenyek/uborka.png', '#5c705f'),
+(6, 'Kukorica', 'Zea mays', 75, 30, 'novenyek/kukorica.png', '#5c705f'),
+(7, 'Fokhagyma', 'Allium sativum',30, 10, 'novenyek/fokhagyma.png', '#5c705f'),
+(8, 'Paprika', 'Capsicum annuum', 50, 40, 'novenyek/paprika.png', '#5c705f'),
+(9, 'Tök', 'Cucurbita pepo', 120, 90, 'novenyek/tok.png', '#5c705f'),
+(10, 'Borsó', 'Pisom sativum', 60, 20, 'novenyek/borso.png', '#5c705f'),
+(11, 'Padlizsán', 'Solanum melongena', 60, 40, 'novenyek/padlizsan.png', '#5c705f'),
+(12, 'Cékla', 'Beta vulgaris', 30, 8, 'novenyek/cekla.png', '#5c705f'),
+(13, 'Retek', 'Raphanus sativus', 20, 5, 'novenyek/retek.png', '#5c705f'),
+(14, 'Spenót', 'Spinicia oleracea', 30, 5, 'novenyek/spenot.png', '#5c705f'),
+(15, 'Bab', 'Vicia faba', 50, 15, 'novenyek/bab.png', '#5c705f'),
+(16, 'Búza', 'Triticum aestivum', 30, 5, 'novenyek/buza.png', '#5c705f'),
+(17, 'Burgonya', 'Solanum tuberosum', 75, 30, 'novenyek/burgonya.png', '#5c705f'),
+(18, 'Mogyoró', 'Corylus avellana', 400, 300, 'novenyek/mogyoro.png', '#5c705f'),
+(19, 'Alma', 'Malus domestica', 300, 300, 'novenyek/alma.png', '#5c705f'),
+(20, 'Málna', 'Rubus idaeus', 200, 40, 'novenyek/malna.png', '#5c705f');
 
 
 INSERT INTO kapcsolat (noveny1_id, noveny2_id, kapcsolatuk)
