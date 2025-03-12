@@ -145,7 +145,7 @@
                 input1.max = "20";
                 input1.name = "hossz";
                 input1.id = "hossz";
-                input1.value = "1";
+                input1.value = "10";
 
                 let br = document.createElement("br");
                 let br2 = document.createElement("br")
@@ -159,7 +159,7 @@
                 input2.max = "20";
                 input2.name = "szelesseg";
                 input2.id = "szelesseg";
-                input2.value = "1";
+                input2.value = "10";
 
                 let kuldes2 = document.createElement("button")
                 kuldes2.id = "kuldes2"; 
@@ -218,17 +218,21 @@
                             const results3 = db.exec("SELECT id, nev, novenyek_id FROM fajta");
 
                             let fajtaLista = [];
+
                             results3[0].values.forEach(row => {
+
                                 let faj = new Fajta(row[0], row[1], row[2]);
                                 fajtaLista.push(faj);
                             });
+                            
 
                             const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
                             div2.remove();
                             let div4 = document.createElement("div");
                             div4.id = "kozep3";
                         
-                                    
+                            
+
                             let novenyekLista = [];
                             results[0].values.forEach(row => {
                                 let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
@@ -314,6 +318,7 @@
                                                 }
 
                                                 let fajtaCell = document.createElement("td");
+                                                fajtaCell.classList = "fajtaCell";
                                                 let fajtaInput = document.createElement("td");
                                                 input3 = document.createElement("input");
                                                 input3.classList = "input3"
@@ -324,6 +329,7 @@
                                                 row.appendChild(fajtaCell);
                                                 row.appendChild(fajtaInput);
                                                 table.appendChild(row);
+                                                //console.log(fajta.nev)
                                             });
                                         }
                                     });
@@ -340,228 +346,172 @@
 
                                     document.body.appendChild(div5);
                                     document.body.insertBefore(div5, footer);
-                                    //onsole.log(selectedNovenyek)   
-                                    function is_valid_placement(garden, row, col, fajta, plant_data, kapcsolatLista) {
-    /**
-     * Ellenőrzi, hogy az adott fajta elhelyezhető-e a megadott pozíción.
-     */
-    const ROWS = garden.length;
-    const COLUMNS = garden[0].length;
-
-    // Növény adatainak lekérése
-    const plant = plant_data[fajta].noveny_id;
-    const sor_tav = plant_data[fajta].sor_tav;
-    const to_tav = plant_data[fajta].to_tav;
-
-    // Ellenőrizze a sortávot és törtávot
-    for (let i = Math.max(0, row - sor_tav); i <= Math.min(ROWS - 1, row + sor_tav); i++) {
-        for (let j = Math.max(0, col - to_tav); j <= Math.min(COLUMNS - 1, col + to_tav); j++) {
-            if (garden[i][j] !== null && garden[i][j] !== fajta) {
-                return false;
-            }
-        }
-    }
-
-    // Ellenőrizze a kapcsolatokat
-    for (let i = Math.max(0, row - 1); i <= Math.min(ROWS - 1, row + 1); i++) {
-        for (let j = Math.max(0, col - 1); j <= Math.min(COLUMNS - 1, col + 1); j++) {
-            if (garden[i][j] !== null && garden[i][j] !== fajta) {
-                const neighbor_fajta = garden[i][j];
-                const neighbor_plant = plant_data[neighbor_fajta].noveny_id;
-                const kapcsolat = kapcsolatLista.find(k => 
-                    (k.noveny1_id === plant && k.noveny2_id === neighbor_plant) || 
-                    (k.noveny1_id === neighbor_plant && k.noveny2_id === plant)
-                );
-                if (kapcsolat && kapcsolat.kapcsolatuk === "nem") {
-                    return false;
-                }
-            }
-        }
-    }
-
-    return true;
-}
-
-function backtrack(garden, fajtak, plant_data, kapcsolatLista, selectedFajtak, quantities, nem_elhelyezheto, index = 0) {
-    /**
-     * Backtracking függvény a növényfajták elhelyezésére.
-     */
-    const ROWS = garden.length;
-    const COLUMNS = garden[0].length;
-
-    if (index === selectedFajtak.length) {
-        return true; // Minden fajta el lett helyezve
-    }
-
-    const fajta = selectedFajtak[index];
-    const quantity = quantities[fajta];
-
-    let placed = 0; // Hány darabot sikerült elhelyezni
-
-    for (let i = 0; i < ROWS; i++) {
-        for (let j = 0; j < COLUMNS; j++) {
-            if (garden[i][j] === null && is_valid_placement(garden, i, j, fajta, plant_data, kapcsolatLista)) {
-                garden[i][j] = fajta;
-                placed++;
-
-                if (placed === quantity) {
-                    // Ha az összes példányt elhelyeztük, megyünk a következő fajtára
-                    if (backtrack(garden, fajtak, plant_data, kapcsolatLista, selectedFajtak, quantities, nem_elhelyezheto, index + 1)) {
-                        return true;
-                    }
-                    break; // Kilépünk a külső ciklusból is
-                }
-            }
-        }
-    }
-
-    if (placed < quantity) {
-        // Ha nem sikerült az összes példányt elhelyezni, hozzáadjuk a nem_elhelyezheto listához
-        nem_elhelyezheto.push(fajta);
-    }
-
-    // Folytatjuk a következő fajtával
-    return backtrack(garden, fajtak, plant_data, kapcsolatLista, selectedFajtak, quantities, nem_elhelyezheto, index + 1);
-}
-                                                                        
-                                   /* kuldes4.addEventListener("click", function(event){
-                                        //event.preventDefault();
+                                    //console.log(selectedNovenyek)   
+                                                                                    
+                                    kuldes4.addEventListener("click", function(event){
+                                        event.preventDefault();
                                         let db = 0;
                                         let input3 =[... document.getElementsByClassName("input3")]
                                         input3.forEach((e) => {db += +e.value})
-                                        //console.log(db)
+                                        
+                                        let fajtaLista = [...document.getElementsByClassName("fajtaCell")];
+                                        //fajtaLista.forEach((e) => {console.log(e.textContent)})
                                         if(db == 0)
                                         {
                                             alert("Nem adott meg egyetlen egy növényfajta mennyiséget sem")
                                         }
                                         else{
-                                            div5.remove()
-                                            
-                                            const ROWS = parseInt(input1.value);
-                                            const COLUMNS = parseInt(input2.value);
-                                            let garden = Array.from({ length: ROWS }, () => Array(COLUMNS).fill(null));
+                                           div5.remove();
+                                           /*const preferences = {};
+                                           const plants = {};
 
-                                            // Növényadatok és kapcsolatok betöltése
-                                            let plant_data = {};
-                                            novenyekLista.forEach(noveny => {
-                                                plant_data[noveny.id] = {
-                                                    sor_tav: noveny.sor_tav,
-                                                    to_tav: noveny.to_tav
-                                                };
-                                            });
+                                          
 
-                                            // Backtracking futtatása
-                                            if (backtrack(garden, novenyekLista, plant_data, kapcsolatLista, selectedNovenyek)) {
-                                                let div6 = document.createElement("div");
-                                                div6.id = "kozep5";
-                                                let table = document.createElement("table");
-                                                table.id = "matrixTable";
+                                            for (const noveny of novenyekLista) {
+                                                const magyar = noveny.magyar;
+                                                preferences[magyar] = {nem_szereti : []} ;
+                                                for (const kapcsolat of kapcsolatLista) {
+                                                    if(noveny.id === kapcsolat.noveny1_id && kapcsolat.kapcsolatuk === "nem"){
+                                                        const masikNoveny = novenyekLista.find(n => n.id === kapcsolat.noveny2_id).magyar;
 
-                                                // Mátrix megjelenítése
-                                                for (let i = 0; i < ROWS; i++) {
-                                                    let tr = document.createElement("tr");
-                                                    for (let j = 0; j < COLUMNS; j++) {
-                                                        let td = document.createElement("td");
-                                                        td.textContent = garden[i][j] ? novenyekLista.find(n => n.id === garden[i][j]).magyar : "Üres";
-                                                        tr.appendChild(td);
+                                                        preferences[magyar].nem_szereti.push(masikNoveny);    
                                                     }
-                                                    table.appendChild(tr);
                                                 }
+                                           }
+                                           console.log(preferences)
+                                           
+                                           function ellenorzes(grid, row, col, plant){
+                                            const directions = [
+                                                [-1, 0], [1, 0], [0, -1], [0, 1]
+                                            ]
+                                            for(const [dr, dc] of directions){
+                                                const r = row + dr;
+                                                const c = col + dc;
+                                                if(r >= 0 && r < grid.length && c >= 0 && c < grid[0].length){
+                                                    const neighbor = grid[r][c];
+                                                    if(preferences[plant].nem_szereti.includes(neighbor)){
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                            return true;
+                                           }
 
+                                           function solve(grid, plants, index){
+                                            if(index === plants.length){
+                                                return true;
+                                            }
+                                            const [plant, count] = plants[index];
+                                            for(let row = 0; row < grid.length; row++){
+                                                for(let col = 0; col < grid.length; col++){
+                                                    if(grid[row][col] === '' && ellenorzes(grid, rol, col, plant)){
+                                                        grid[row][col] = plant;
+                                                        plants[index][1]--;
+                                                        if(plants[index][1] === 0){
+                                                            if(solve(grid, plants, index + 1)){
+                                                                return true;
+                                                            }
+                                                        }
+                                                        else{
+                                                            if(solve(grid, plants, index)){
+                                                                return true;
+                                                            }
+                                                        }
+                                                        
+                                                        grid[row][col] = null;
+                                                        plants[index][1]++;
+                                                    }
+                                                }
+                                            }
+                                            return false;
+                                           }
+                                           
+                                           let div6 = document.createElement("div");
+                                           div6.id = "kozep5";
+
+                                           function createGrid(grid){
+                                            let table = document.createElement("table");
+                                            table.id = "matrixTable";
+                                            for(let row = 0; row < grid.length; row++){
+                                                let sor = document.createElement("tr");
+                                                for(let col = 0; col < grid.length; col++){
+                                                    let cell = document.createElement("td");
+                                                    cell.textContent = grid[row][col];
+                                                    row.appendChild(cell);
+                                                }
+                                                table.appendChild(sor);
                                                 div6.appendChild(table);
                                                 document.body.appendChild(div6);
                                                 document.body.insertBefore(div6, footer);
-                                            } else {
-                                                alert("Nem sikerült érvényes elrendezést találni a növényeknek.");
-                                            } 
+                                            }
+                                            return table;
+                                           }
+
+                                           for(const novenyke of novenyekLista){
+                                                for (let i = 0; i < input3.length; i++) {
+                                                    if (novenyke.id === input3[i]) {
+                                                        let neve = novenyke.magyar;
+                                                        let mennyiseg = input3[i].value;
+                                                        plants[neve] = { count: mennyiseg };
+                                                }
+
+                
+
+               
+
+
+                                                }
+                                            }
+
+                                           const grid = new Array(input1.value).fill(null).map(() => new Array(input2.value).fill(null));*/
+
+                                           let div6 = document.createElement("div");
+                                           div6.id = "kozep5";
+
+                                           let table2 = document.createElement("table");
+                                           table2.id = "matrixTable";
+                                           for(let i = 0; i < input1.value; i++){
+                                            let row = document.createElement("tr");
+                                            for(let j = 0; j < input2.value; j++){
+                                                let cell = document.createElement("td");
+                                                cell.textContent = "";
+                                                row.appendChild(cell);
+                                            }
+                                            table2.appendChild(row);
+                                           }
+                                           let rowIndex = 0;
+                                           let colIndex = 0;
+
+                                           fajtaLista.forEach((fajtaCell, index) => {
+                                                const fajtaNev = fajtaCell.textContent; 
+                                                const mennyiseg = parseInt(input3[index].value); 
+
+                                            for (let i = 0; i < mennyiseg; i++) {
+                                                const cell = table2.rows[rowIndex]?.cells[colIndex]; 
+
+                                                if (cell) {
+                                                    cell.textContent = fajtaNev; 
+                                                }
+                                                colIndex++;
+                                                if (colIndex >= input2.value) {
+                                                    colIndex = 0;
+                                                    rowIndex++;
+
+                                                    if (rowIndex >= input1.value) {
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            });
+
+                                           div6.appendChild(table2);
+                                           document.body.appendChild(div6);
+                                           document.body.insertBefore(div6, footer);
                                         }
-                                    });*/
-                                    kuldes4.addEventListener("click", function (event) {
-    event.preventDefault();
-    let db = 0;
-    let input3 = [...document.getElementsByClassName("input3")];
-    input3.forEach((e) => { db += +e.value });
-
-    if (db == 0) {
-        alert("Nem adott meg egyetlen egy növényfajta mennyiséget sem");
-    } else {
-        div5.remove();
-
-        // Kert mátrix létrehozása
-        const ROWS = parseInt(input1.value);
-        const COLUMNS = parseInt(input2.value);
-        let garden = Array.from({ length: ROWS }, () => Array(COLUMNS).fill(null));
-
-        // Növényadatok és kapcsolatok betöltése
-        let plant_data = {};
-        fajtaLista.forEach(fajta => {
-            plant_data[fajta.id] = {
-                noveny_id: fajta.novenyek_id,
-                sor_tav: novenyekLista.find(n => n.id === fajta.novenyek_id).sor_tav,
-                to_tav: novenyekLista.find(n => n.id === fajta.novenyek_id).to_tav
-            };
-        });
-
-        // Mennyiségek összegyűjtése
-        let quantities = {};
-        selectedNovenyek.forEach((plant, index) => {
-            const fajtak = fajtaLista.filter(f => f.novenyek_id === plant);
-            fajtak.forEach(fajta => {
-                quantities[fajta.id] = parseInt(input3[index].value);
-            });
-        });
-
-        // Nem elhelyezhető fajták listája
-        let nem_elhelyezheto = [];
-
-        // Backtracking futtatása
-        backtrack(garden, fajtaLista, plant_data, kapcsolatLista, Object.keys(quantities), quantities, nem_elhelyezheto);
-
-        // Eredmény megjelenítése
-        console.log(fajtaLista)
-        let div6 = document.createElement("div");
-        div6.id = "kozep5";
-
-        // Kert mátrix megjelenítése
-        let table = document.createElement("table");
-        table.id = "matrixTable";
-        for (let i = 0; i < ROWS; i++) {
-            let tr = document.createElement("tr");
-            for (let j = 0; j < COLUMNS; j++) {
-                let td = document.createElement("td");
-                const fajtaId = garden[i][j];
-                if (fajtaId) {
-                    const fajta = fajtaLista.find(f => f.id === fajtaId);
-                    td.textContent = fajta.nev;
-                } else {
-                    td.textContent = "-";
-                }
-                tr.appendChild(td);
-            }
-            table.appendChild(tr);
-        }
-        div6.appendChild(table);
-
-        // Nem elhelyezhető fajták megjelenítése
-        if (nem_elhelyezheto.length > 0) {
-            let h2 = document.createElement("h2");
-            h2.textContent = "Nem elhelyezhető fajták:";
-            div6.appendChild(h2);
-
-            let ul = document.createElement("ul");
-            nem_elhelyezheto.forEach(fajtaId => {
-                const fajta = fajtaLista.find(f => f.id === fajtaId);
-                let li = document.createElement("li");
-                li.textContent = fajta.nev;
-                ul.appendChild(li);
-            });
-            div6.appendChild(ul);
-        }
-
-        document.body.appendChild(div6);
-        document.body.insertBefore(div6, footer);
-    }
-});
+                                        
+                                        
+                                    });
+                                
                                 }
                                 
                             });
