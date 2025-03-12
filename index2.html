@@ -3,35 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="novenyek/favicon.png">
     <title>Kerttervező</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+    <link rel="icon" type="image/x-icon" href="\novenyek/favicon.png">
 </head>
 <body>
-    <h1>Növények</h1>
-    <table id="novenyekTable" >
+    <div id="top" class="">
 
-    </table>
+        <h5 id="tervezes"> <a href="index2.html" style="text-decoration: none;     color: rgb(243, 233, 233);">Tervezés</a></h5>
+        <h5 id="hozzaadas"> <a href="hozzaadas.html" style="text-decoration: none; color: rgb(243, 233, 233);">Hozzáadás</a></h5>
 
-    <form id="parcellaForm">
-        <label for="noveny1">Növény 1:</label>
-        <select name="noveny1" id="noveny1">
-          <option value="1">Sárgarépa</option>
-          <option value="2">Paradicsom</option>
-          <!-- További növények -->
-        </select>
-        <label for="mennyiseg1">Mennyiség:</label>
-        <input type="number" name="mennyiseg1" id="mennyiseg1" min="1" value="1">
-      
-        <!-- További növények és mennyiségek -->
-      
-        <button type="submit">Parcella generálása</button>
-      </form>
+        <h3 id="oldalnev">Kerttervező</h3>
+    </div>
 
-    <div class="parcella" id="parcella">
-        <!-- Itt jelennek meg a növények -->
-      </div> <img src="" alt="">
+
+    <div id="gombokContainer">
+
+    </div>
+
+    <div id="kozep">
+        <div>
+            <h1 id="cim1">Parcella</h1>
+            <form action="" id="form1">
+                <label for="mennyiseg">A parcellák száma (darab)</label>
+                <input type="number" id="mennyiseg" name="mennyiseg" min="1" max="16" value="1">
+                <br>
+                <button id="kuldes1" onclick="kuldes()">Tovább</button>
+            </form>
+        </div>
+        
+    </div>
 
     <script>
         class Noveny {
@@ -53,23 +56,127 @@
             }
         }
         class Fajta {
-            constructor(id, nev, noveny_id) {
+            constructor(id, nev, novenyek_id) {
                 this.id = id;
                 this.nev = nev;
-                this.noveny_id = noveny_id;
-  
+                this.novenyek_id = novenyek_id;
+
             }
         }
+
+        class HozzaNoveny {
+            constructor(id, magyar, latin, sor_tav, to_tav, kep) {
+                this.id = id;
+                this.magyar = magyar;
+                this.latin = latin;
+                this.sor_tav = sor_tav;
+                this.to_tav = to_tav;
+                this.kep = kep;
+
+            }
+        }
+        let HozzanovenyekLista = [];
+
+        function renderTable(novenyekLista) {
+
+            novenyekLista.forEach((noveny, index) => {
+
+                const ujNoveny = new HozzaNoveny(
+                    noveny.id || index + 1, 
+                    noveny.magyar,
+                    noveny.latin,
+                    noveny.sor_tav,
+                    noveny.to_tav,
+                    noveny.kep || noveny.szin
+                );
+                HozzanovenyekLista.push(ujNoveny);
+            });
+
+            console.log(HozzanovenyekLista);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const novenyek = JSON.parse(localStorage.getItem("novenyek")) || [];
+            renderTable(novenyek);
+        });
+
+
+
+
+
+
+
+      /*  function gombokMost() {
+    let selectedNovenyek = [];
+
+    // Load previously selected buttons from sessionStorage
+    for (let i = 0; i < HozzanovenyekLista.length; i++) {
+        if (sessionStorage.getItem(`gomb_${HozzanovenyekLista[i].id}`) === "active") {
+            selectedNovenyek.push(HozzanovenyekLista[i].id);
+        }
+    }
+
+    // Create buttons for each plant
+    for (let i = 0; i < HozzanovenyekLista.length; i++) {
+        let noveny = HozzanovenyekLista[i];
+
+        // Create button
+        let button = document.createElement("button");
+        button.className = "gomb";
+        button.setAttribute("data-info", noveny.magyar);
+
+        // Set button content (image or color block)
+        if (noveny.kep && noveny.kep.includes(".png")) {
+            button.innerHTML = `<img src="${noveny.kep}" alt="${noveny.magyar}" style="width: 90%; height: auto;">`;
+        } else {
+            button.innerHTML = `<div style="background-color: ${noveny.kep}; width: 50px; height: 50px;"></div>`;
+        }
+
+        // Set initial active state
+        if (sessionStorage.getItem(`gomb_${noveny.id}`) === "active") {
+            button.classList.add("active");
+        }
+
+        // Add click event listener
+        button.addEventListener("click", function () {
+            let novenyId = noveny.id;
+
+            // Toggle active state
+            if (this.classList.contains("active")) {
+                this.classList.remove("active");
+                sessionStorage.removeItem(`gomb_${novenyId}`);
+                selectedNovenyek = selectedNovenyek.filter(id => id !== novenyId); // Remove from selected list
+            } else {
+                this.classList.add("active");
+                sessionStorage.setItem(`gomb_${novenyId}`, "active");
+                selectedNovenyek.push(novenyId); // Add to selected list
+            }
+
+            console.log("Kiválasztott növények:", selectedNovenyek);
+        });
+
+        // Append button to the container (assuming you have a container with ID "gombokContainer")
+        document.getElementById("gombokContainer").appendChild(button);
+    }
+}
+
+*/
+
+
+
+
+
+
+
+
         async function loadDatabase() {
-            // SQLite.js betöltése
+
             const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
 
-            // Adatbázis fájl betöltése
             const response = await fetch("kerttervezo.db");
             const buffer = await response.arrayBuffer();
             const db = new SQL.Database(new Uint8Array(buffer));
 
-            //Növények tábla listája + a táblázat
             const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
             
             let table = document.getElementById("novenyekTable");
@@ -77,10 +184,6 @@
             let novenyekLista = [];
 
             results[0].values.forEach(row => {
-                let tr = document.createElement("tr");
-                tr.innerHTML = `<td><img src="${row[5]}"></td><td>${row[1]}</td><td>${row[2]}</td><td>${row[3]}cm</td><td>${row[4]}cm</td><td><input type="number" id="mennyiseg" name="mennyiseg" min="1" max="100" value="0"></td>`;
-                table.appendChild(tr);
-
                 let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
                 novenyekLista.push(noveny);
             });
@@ -116,86 +219,276 @@
         }
 
         loadDatabase();
-        /*
-                  let table = document.createElement("table");
-            let body = document.getElementsByTagName('body')[0];
-            body.appendChild(table);
 
-            let magyar = document.createElement("th");
-            let latin = document.createElement("th");
-            let to = document.createElement("th");
-            let sor = document.createElement("th");
-
-            table.appendChild(magyar);
-            table.appendChild(latin);
-            table.appendChild(sor);
-            table.appendChild(to);
-        */
-    </script>
-
-
-
-    <script>
-   /*     
-
-    function elhelyezNoveny(parcella, noveny, sorTav, toTav, mennyiseg) {
-        // Iteráljunk végig a kívánt mennyiségen és helyezzük el a növényeket
-        let x = 0, y = 0;
-        for (let i = 0; i < mennyiseg; i++) {
-            if (x + toTav > parcella.width) {
-            x = 0;
-            y += sorTav;
-            }
-            // Elhelyezés logika, pl. HTML elem létrehozása és pozicionálása
-            let novenyElem = document.createElement('div');
-            novenyElem.style.position = 'absolute';
-            novenyElem.style.left = `${x}px`;
-            novenyElem.style.top = `${y}px`;
-            novenyElem.textContent = noveny.nev;
-            parcella.appendChild(novenyElem);
-            x += toTav;  // Következő növény pozíciója
-        }
-    }
-
-    function elhelyezNovenyKapcsolatokkal(parcella, novenyek, kapcsolatok) {
-        let x = 0, y = 0;
-        let elhelyezettNovenyek = [];
         
-        for (let i = 0; i < novenyek.length; i++) {
-            let noveny = novenyek[i];
-            let sorTav = noveny.sor_tav;
-            let toTav = noveny.to_tav;
-            let mennyiseg = noveny.mennyiseg;
+        function kuldes(){
             
-            for (let j = 0; j < mennyiseg; j++) {
-            // Ellenőrizd, hogy nem ütközik-e más növénnyel, amely "nem szeret" egymás mellett
-            if (checkForConflicts(elhelyezettNovenyek, noveny, x, y, kapcsolatok)) {
-                // Ha ütközik, új helyet keres
-                x += toTav;
-                if (x + toTav > parcella.width) {
-                x = 0;
-                y += sorTav;
-                }
+
+            let mennyiseg = document.getElementById('mennyiseg').value;
+            console.log(mennyiseg); 
+            let div1 = document.getElementById("kozep");
+            if(mennyiseg.length == 0){
+                alert("Nem adott meg mennyiséget!");
             }
-            
-            let novenyElem = document.createElement('div');
-            novenyElem.style.position = 'absolute';
-            novenyElem.style.left = `${x}px`;
-            novenyElem.style.top = `${y}px`;
-            novenyElem.textContent = noveny.nev;
-            parcella.appendChild(novenyElem);
-            
-            elhelyezettNovenyek.push({ noveny, x, y });  // Eltároljuk a növény pozícióját
-            x += toTav;  // Következő növény pozíciója
+            else if(mennyiseg > 16){alert("Túl nagy a a megadott parcellák száma!");}
+            else{
+                div1.remove();
+                let div2 = document.createElement("div");
+                let h1 = document.createElement("h1");
+                h1.innerHTML = "Parcella nagyága"
+                div2.id = "kozep2";
+                let div3 = document.createElement("div");
+                let form1 = document.createElement("form");
+                form1.action = "";
+                form1.id = "form1";
+                let label1 = document.createElement("label");
+                label1.for = "hossz";
+
+                label1.textContent = "A parcella hossza (méter)  ";
+                let input1 = document.createElement("input");
+                input1.type = "number";
+                input1.min = "1";
+                input1.max = "20";
+                input1.name = "hossz";
+                input1.id = "hossz";
+                input1.value = "1";
+
+                let br = document.createElement("br");
+                let br2 = document.createElement("br")
+                
+                let label2 = document.createElement("label");
+                label2.for = "szélesség";
+                label2.textContent = "A parcella szélessége (méter)  ";
+                let input2 = document.createElement("input");
+                input2.type = "number";
+                input2.min = "1";
+                input2.max = "20";
+                input2.name = "szelesseg";
+                input2.id = "szelesseg";
+                input2.value = "1";
+
+                let kuldes2 = document.createElement("button")
+                kuldes2.id = "kuldes2"; 
+                kuldes2.textContent = "Tovább"
+                kuldes2.type = "submit";
+                
+
+                form1.appendChild(label1);
+                form1.appendChild(input1);
+                form1.appendChild(br);
+                form1.appendChild(label2);
+                form1.appendChild(input2);
+                form1.appendChild(br2);
+                form1.appendChild(kuldes2);
+                div3.appendChild(h1)
+                div3.appendChild(form1);
+                div2.appendChild(div3);
+                document.body.appendChild(div2);
+                document.body.insertBefore(div2, footer);
+                
+
+                kuldes2.addEventListener("click", function (event){
+                    event.preventDefault();
+                    if(parseInt(input1.value) > 20){
+                        alert("Túl nagy parcella hosszt adott meg!")
+                    }
+                    else if(parseInt(input1.value) > 20){
+                        alert("Túl nagy parcella szélességet adott meg!")
+                    }
+                    else if(input1.value.length === 0){
+                        alert("Nem adott meg parcella hosszt!")
+                    }
+                    else if(input2.value.length === 0){
+                        alert("Nem adott meg parcella szélességet!")
+                    }
+                    else{
+                        async function loadDatabase() {
+
+                            const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
+
+                            const response = await fetch("kerttervezo.db");
+                            const buffer = await response.arrayBuffer();
+                            const db = new SQL.Database(new Uint8Array(buffer));
+
+                            const results3 = db.exec("SELECT id, nev, novenyek_id FROM fajta");
+
+                            let fajtaLista = [];
+                            results3[0].values.forEach(row => {
+                                let faj = new Fajta(row[0], row[1], row[2]);
+                                fajtaLista.push(faj);
+                            });
+
+                            const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
+                            div2.remove();
+                            let div4 = document.createElement("div");
+                            div4.id = "kozep3";
+                        
+                                    
+                            let novenyekLista = [];
+                            results[0].values.forEach(row => {
+                                let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
+                                novenyekLista.push(noveny);
+                            });
+
+
+
+
+                            let selectedNovenyek = [];
+
+                            for (let i = 0; i < HozzanovenyekLista.length; i++) {
+                                if (sessionStorage.getItem(`gomb_${HozzanovenyekLista[i].id}`) === "active") {
+                                    selectedNovenyek.push(HozzanovenyekLista[i].id);
+                                }
+                            }
+
+                            // Create buttons for each plant
+                            for (let i = 0; i < HozzanovenyekLista.length; i++) {
+                                let noveny = HozzanovenyekLista[i];
+
+                                // Create button
+                                let button = document.createElement("button");
+                                button.className = "gomb";
+                                button.setAttribute("data-info", noveny.magyar);
+
+                                // Set button content (image or color block)
+                                if (noveny.kep && noveny.kep.includes(".png")) {
+                                    button.innerHTML = `<img src="${noveny.kep}" alt="${noveny.magyar}" style="width: 90%; height: auto;">`;
+                                } else {
+                                    button.innerHTML = `<div style="background-color: ${noveny.kep}; width: 120%; height: 5.2vh;"></div>`; //------------------------------itt lehet állítani a szín gomb méretét---------------------------------------- 
+                                }
+
+                                // Set initial active state
+                                if (sessionStorage.getItem(`gomb_${noveny.id}`) === "active") {
+                                    button.classList.add("active");
+                                }
+
+                                // Add click event listener
+                                button.addEventListener("click", function () {
+                                    let novenyId = noveny.id;
+
+                                    // Toggle active state
+                                    if (this.classList.contains("active")) {
+                                        this.classList.remove("active");
+                                        sessionStorage.removeItem(`gomb_${novenyId}`);
+                                        selectedNovenyek = selectedNovenyek.filter(id => id !== novenyId); // Remove from selected list
+                                    } else {
+                                        this.classList.add("active");
+                                        sessionStorage.setItem(`gomb_${novenyId}`, "active");
+                                        selectedNovenyek.push(novenyId); // Add to selected list
+                                    }
+
+                                    console.log("Kiválasztott növények:", selectedNovenyek);
+                                });
+                                
+
+                               ;
+                                div4.appendChild(button);
+                                document.body.appendChild(div4);
+                                document.body.insertBefore(div4, footer);
+                                
+                            }
+                            
+                            let br3 = document.createElement("br");
+                            div4.appendChild(br3);
+                            let button2 = document.createElement("button");
+                            button2.id = "kuldes3";
+                            button2.textContent = "Tovább";
+                            //let input3;
+                            div4.appendChild(button2);
+                            kuldes3.addEventListener("click", function(event){
+                                event.preventDefault();
+                                div4.remove();
+                                let div5 = document.createElement("div");
+                                div5.id = "kozep4";
+
+                                let table = document.createElement("table");
+                                table.id = "valasztoTable";
+
+                                if (selectedNovenyek.length === 0) {
+                                    alert("Nem választott ki egy növényt sem!");
+                                    return;
+                                }
+
+                                selectedNovenyek.forEach(novenyId => {
+                                    let noveny = novenyekLista.find(n => n.id === novenyId);
+                                    let fajtai = fajtaLista.filter(f => f.novenyek_id === novenyId);
+
+                                    if (fajtai.length > 0) {
+                                        let rowSpan = fajtai.length;
+
+                                        fajtai.forEach((fajta, index) => {
+                                            let row = document.createElement("tr");
+
+                                            if (index === 0) {
+                                                let cell = document.createElement("td");
+                                                cell.rowSpan = rowSpan;
+                                                cell.textContent = noveny.magyar;
+                                                row.appendChild(cell);
+                                            }
+
+                                            let fajtaCell = document.createElement("td");
+                                            input3 = document.createElement("input");
+                                            input3.classList = "input3"
+                                            input3.type = "number";
+                                            input3.min = "0";
+                                            fajtaCell.innerHTML = fajta.nev;
+                                            fajtaCell.appendChild(input3);
+                                            row.appendChild(fajtaCell);
+                                            table.appendChild(row);
+                                        });
+                                    }
+                                });
+
+                                let kuldes4 = document.createElement("button");
+                                kuldes4.id = "kuldes4";
+                                kuldes4.textContent = "Küldés"
+                                kuldes4.type = "submit";
+                                let br4 = document.createElement("br");
+                                 
+                                div5.appendChild(table);
+                                div5.appendChild(br4);
+                                div5.appendChild(kuldes4);
+
+                                document.body.appendChild(div5);
+                                document.body.insertBefore(div5, footer);
+                                console.log(selectedNovenyek)   
+                                
+                                kuldes4.addEventListener("click", function(event){
+                                    //event.preventDefault();
+                                    let db = 0;
+                                    let input3 =[... document.getElementsByClassName("input3")]
+                                    input3.forEach((e) => {db += +e.value})
+                                    console.log(db)
+                                    if(db == 0)
+                                    {
+                                        alert("Nem adott meg egyetlen egy növényfajta mennyiséget sem")
+                                    }
+                                    else{
+                                        div5.remove()
+                                        let matrix = [input1.value, input2.value]
+
+                                        for(let i = 0; i < input1.value; i++){
+                                            for(let j = 0; j < input2.value; j++){
+
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+
+                        }
+                        loadDatabase();
+                    }
+                })
             }
         }
-    
-    }
-    elhelyezNoveny()
-    elhelyezNovenyKapcsolatokkal();
-
-    */
+        
+       
     </script>
+
+    <div id="footer">
+        <p>© 2025</p>
+    </div>
 
 </body>
 </html>

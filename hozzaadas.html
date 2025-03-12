@@ -31,10 +31,21 @@
             height: 20px;
         }
 
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); /* Alulról indul */
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); /* Végső helyére kerül */
+            }
+        }
+
         #hozzaadasa{
             width: 70%;
             margin: auto;
-            margin-top: 100px;
+            margin-top: 40px;
             margin-bottom: 50px;
 
             text-align: center;
@@ -48,6 +59,7 @@
             box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
             box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
             border-radius: 10px;
+            animation: fadeIn 0.8s ease-in-out;
 
         }
         input[type=number]{
@@ -58,6 +70,95 @@
             height: 40px;
         }
 
+
+        #torlesGomb{
+            text-decoration: none;
+            background-color: transparent;
+            border: none;
+        }
+
+        #torlesGomb:hover{
+            transform: scale(1.3);
+        }
+        
+
+
+
+        /* Dropdown container */
+        .dropdown, .dropdown2 {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown button */
+        .dropdown-btn, .dropdown-btn2 {
+            background-color: #123524;
+            color: white;
+            padding: 10px;
+            padding-left: 20px;
+            padding-right: 20px;
+            /*margin-right: 30px;*/
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-btn:hover, .dropdown-btn2:hover, .dropdown-btn:active, .dropdown-btn2:active{
+            background-color: #0a1f15;
+        }
+
+        /* Dropdown content (hidden by default) */
+        .dropdown-content{
+            display: none;
+            position: absolute;
+            background-color: #349234;
+            color: black;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            padding: 10px;
+            top: -200px;
+            right: 100%; 
+            text-align: left;
+            max-height: 400px; /* Set a max height */
+            overflow-y: auto; /* Add a scrollbar if content overflows */
+        }
+        .dropdown-content2 {
+            display: none;
+            position: absolute;
+            background-color: #349234;
+            color: black;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            padding: 10px;
+            top: -200px;
+            left: 100%; 
+            text-align: left;
+            max-height: 400px; /* Set a max height */
+            overflow-y: auto; /* Add a scrollbar if content overflows */
+        }
+
+        /* Show the dropdown content when active */
+        .dropdown.active .dropdown-content, .dropdown2.active .dropdown-content2 {
+            display: block;
+        }
+
+        /* Style the checkboxes and labels */
+        .dropdown-content label, .dropdown-content2 label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        .dropdown-content input[type="checkbox"], .dropdown-content2 input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+
+        #footer{
+            position: relative;
+        }
     </style>
 
 
@@ -65,11 +166,11 @@
 
 <body>
     <div id="top">
-        <h5 id="tervezes" onclick="navigateToIndex()"> <a href="index.html" style="text-decoration: none; color: rgb(243, 233, 233);">Tervezés</a></h5>
+        <h5 id="tervezes"> <a href="index2.html" style="text-decoration: none; color: rgb(243, 233, 233);">Tervezés</a></h5>
         <h5 id="hozzaadas"> <a href="hozzaadas.html" style="text-decoration: none; color: rgb(243, 233, 233);">Hozzáadás</a></h5>
         <h3 id="oldalnev">Kerttervező</h3>
         
-        <button onclick="navigateToIndex()">Vissza a főoldalra</button>
+        
     </div>
 
     <div id="hozzaadasa">
@@ -80,6 +181,24 @@
             <label>Sor távolság (cm): <input type="number" id="sorTav" min="1" required></label><br>
             <label>Tő távolság (cm): <input type="number" id="toTav" min="1" required></label><br>
             <label>Szín választás: <input type="color" id="novenySzin" name="color" required></label><br>
+
+            <div id="kapcsolatDiv">
+                <div class="dropdown">
+                    <label class="dropdown-btn"> << Szereti</label>
+                    <div class="dropdown-content">
+                        <div class="plant-columns">
+                        <!-- Plants with checkboxes will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dropdown2">
+                    <label class="dropdown-btn2">Nem szereti >></label>
+                    <div class="dropdown-content2">
+                        <!-- Plants with checkboxes will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
             <button type="submit" id="hozza">Hozzáadás</button>
         </form>
     </div>
@@ -99,6 +218,88 @@
     </table>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+    const novenyek = JSON.parse(localStorage.getItem("novenyek")) || [];
+    const dropdownContent = document.querySelector(".dropdown-content");
+
+    // Clear existing options
+    dropdownContent.innerHTML = "";
+
+    // Add a checkbox for each plant
+    novenyek.forEach((noveny) => {
+        const label = document.createElement("label");
+        label.style.display = "block"; // Ensure each plant is on a new line
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectedPlants";
+        checkbox.value = noveny.id;
+
+        const text = document.createTextNode(`${noveny.magyar}`);
+
+        label.appendChild(checkbox);
+        label.appendChild(text);
+        dropdownContent.appendChild(label);
+    });
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const novenyek = JSON.parse(localStorage.getItem("novenyek")) || [];
+    const dropdownContent2 = document.querySelector(".dropdown-content2");
+
+    // Clear existing options
+    dropdownContent2.innerHTML = "";
+
+    // Add a checkbox for each plant
+    novenyek.forEach((noveny) => {
+        const label2 = document.createElement("label");
+        label2.style.display = "block"; // Ensure each plant is on a new line
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "selectedPlants";
+        checkbox.value = noveny.id;
+
+        const text = document.createTextNode(`${noveny.magyar}`);
+
+        label2.appendChild(checkbox);
+        label2.appendChild(text);
+        dropdownContent2.appendChild(label2);
+    });
+
+});
+// Toggle dropdown on button click
+document.querySelector(".dropdown-btn").addEventListener("click", function () {
+    this.parentElement.classList.toggle("active");
+});
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (event) {
+    const dropdown = document.querySelector(".dropdown");
+    if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove("active");
+    }
+});
+
+
+// Toggle dropdown on button click
+document.querySelector(".dropdown-btn2").addEventListener("click", function () {
+    this.parentElement.classList.toggle("active");
+});
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (event) {
+    const dropdown2 = document.querySelector(".dropdown2");
+    if (!dropdown2.contains(event.target)) {
+        dropdown2.classList.remove("active");
+    }
+});
+
+
+
+
+
         class Noveny {
             constructor(id, magyar, latin, sor_tav, to_tav, kep, szin) {
                 this.id = id;
@@ -122,7 +323,7 @@
                         <td>${this.latin}</td>
                         <td>${this.sor_tav} cm</td>
                         <td>${this.to_tav} cm</td>
-                        <td><button onclick="torolNoveny(${index})">🗑️</button></td>
+                        <td><button onclick="torolNoveny(${index})" id="torlesGomb">❌</button></td>
                     </tr>
                 `;
             }
@@ -167,6 +368,76 @@
     table.innerHTML = novenyekLista.map((noveny, index) => noveny.renderRow(index)).join("");
 }
 
+
+document.getElementById("novenyForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    let magyarNev = document.getElementById("magyarNev").value.trim();
+    let latinNev = document.getElementById("latinNev").value.trim();
+    let sorTav = document.getElementById("sorTav").value.trim();
+    let toTav = document.getElementById("toTav").value.trim();
+    let szin = document.getElementById("novenySzin").value.trim();
+
+    // Check if the plant already exists
+    let alreadyExists = novenyekLista.some(noveny => noveny.magyar.toLowerCase() === magyarNev.toLowerCase());
+
+    if (alreadyExists) {
+        alert("Ez a növény már létezik a listában!");
+        document.getElementById("novenyForm").reset();
+        return; // Stop the function if the plant already exists
+    }
+    document.getElementById("novenyForm").reset();
+    // Create a new plant object
+    let ujNoveny = new Noveny(Date.now(), magyarNev, latinNev, sorTav, toTav, null, szin);
+    novenyekLista.push(ujNoveny);
+
+    // Save to localStorage
+    localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
+
+    // Send the new plant data to the PHP backend (optional)
+    try {
+        const response = await fetch("http://localhost:8000/add-plant.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                magyar: magyarNev,
+                latin: latinNev,
+                sor_tav: sorTav,
+                to_tav: toTav,
+                szin: szin,
+            }),
+        });
+
+        console.log("Response status:", response.status); // Log the response status
+        const result = await response.json();
+        console.log("Növény hozzáadva az adatbázishoz:", result);
+    } catch (error) {
+        console.error("Hiba:", error);
+    }
+
+    // Render the updated table
+    renderTable();
+
+    // Redirect to probaindex.html
+    //window.location.href = "probaindex.html";
+    //window.location.href = "index2.html";
+
+});
+
+function torolNoveny(index) {
+                if (confirm("Biztosan törlöd ezt a növényt?")) {
+                    novenyekLista.splice(index, 1);
+                    localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
+                    renderTable();
+                }
+            }
+
+
+
+
+/*
 document.getElementById("novenyForm").addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -236,10 +507,12 @@ document.getElementById("novenyForm").addEventListener("submit", async function(
     const encodedData = encodeURIComponent(novenyekListaJSON);
 
     // Navigate to index.html with the data as a query parameter
+    window.location.href = `index2.html?novenyek=${encodedData}`;
     window.location.href = `probaindex.html?novenyek=${encodedData}`;
-}
-    
-        loadDatabase();
+
+}*/
+
+        loadDatabase(); 
     </script>
 
     <div id="footer">
