@@ -207,7 +207,6 @@ li {
     border-radius: 10px;
     max-width: 45%;*/
     width: auto;
-    height: auto;
     margin: auto;
     position: absolute;
     top: 50%;
@@ -218,7 +217,7 @@ li {
     vertical-align: middle;
     justify-content: center;
     align-items: center;
-    display: flex;
+    display: flexbox;
     border: #3E7B27 15px solid;
     background-color: #85A947;
     padding: 30px;
@@ -367,3 +366,28 @@ img{
 
 }
 
+.input3{
+    width: 100px;
+}
+
+#valasztoTable{
+    table-layout: fixed;
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+td, th{
+    border: 2px solid black;
+    padding: 5px;
+    text-align: center;
+}
+
+#kozep5{
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+}
+
+#matrixTable{
+    margin: auto;
+}
