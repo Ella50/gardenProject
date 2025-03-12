@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Növényelhelyezés</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    td {
+      width: 30px;
+      height: 30px;
+      border: 1px solid black;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Növényelhelyezés</h1>
+  <form id="plantForm">
+    <label for="alma">Alma:</label>
+    <input type="number" id="alma" name="alma" min="0" max="100" required><br>
+    <label for="szilva">Szilva:</label>
+    <input type="number" id="szilva" name="szilva" min="0" max="100" required><br>
+    <label for="barack">Barack:</label>
+    <input type="number" id="barack" name="barack" min="0" max="100" required><br>
+    <label for="szolo">Szőlő:</label>
+    <input type="number" id="szolo" name="szolo" min="0" max="100" required><br>
+    <button type="submit">Növények elhelyezése</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    // Növények és azok preferenciái
+    const preferences = {
+      alma: { szereti: ['szilva'], nem_szereti: ['szőlő'] },
+      szilva: { szereti: ['alma'], nem_szereti: ['szőlő'] },
+      barack: { szereti: [], nem_szereti: [] },
+      szőlő: { szereti: [], nem_szereti: ['alma', 'szilva'] }
+    };
+
+    // Ellenőrzi, hogy egy növény biztonságosan elhelyezhető-e egy adott pozícióra
+    function isSafe(grid, row, col, plant) {
+      const directions = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+      for (const [dr, dc] of directions) {
+        const r = row + dr;
+        const c = col + dc;
+        if (r >= 0 && r < 10 && c >= 0 && c < 10) {
+          const neighbor = grid[r][c];
+          if (preferences[plant].nem_szereti.includes(neighbor)) {
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    // Backtracking algoritmus a növények elhelyezésére
+    function solve(grid, plants, index) {
+      if (index === plants.length) {
+        return true; // Minden növény elhelyezve
+      }
+      const [plant, count] = plants[index];
+      for (let row = 0; row < 10; row++) {
+        for (let col = 0; col < 10; col++) {
+          if (grid[row][col] === '' && isSafe(grid, row, col, plant)) {
+            grid[row][col] = plant;
+            plants[index][1]--; // Csökkentjük a növények számát
+            if (plants[index][1] === 0) {
+              if (solve(grid, plants, index + 1)) {
+                return true;
+              }
+            } else {
+              if (solve(grid, plants, index)) {
+                return true;
+              }
+            }
+            grid[row][col] = ''; // Visszalépés
+            plants[index][1]++; // Visszaállítjuk a növények számát
+          }
+        }
+      }
+      return false; // Nem sikerült elhelyezni
+    }
+
+    // HTML táblázat generálása a rács alapján
+    function generateTable(grid) {
+      let table = '<table>';
+      for (let row = 0; row < 10; row++) {
+        table += '<tr>';
+        for (let col = 0; col < 10; col++) {
+          table += `<td>${grid[row][col] || ''}</td>`;
+        }
+        table += '</tr>';
+      }
+      table += '</table>';
+      return table;
+    }
+
+    // Űrlap elküldése
+    document.getElementById('plantForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const plants = [
+        ['alma', parseInt(document.getElementById('alma').value)],
+        ['szilva', parseInt(document.getElementById('szilva').value)],
+        ['barack', parseInt(document.getElementById('barack').value)],
+        ['szőlő', parseInt(document.getElementById('szolo').value)]
+      ];
+
+      // Inicializáljuk a 10x10-es rácsot
+      const grid = Array.from({ length: 10 }, () => Array.from({ length: 10 }, () => ''));
+
+      // Növények elhelyezése
+      if (solve(grid, plants, 0)) {
+        document.getElementById('result').innerHTML = generateTable(grid);
+      } else {
+        document.getElementById('result').innerHTML = '<p>Nem sikerült elhelyezni a növényeket!</p>';
+      }
+    });
+  </script>
+</body>
+</html>
