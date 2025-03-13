@@ -218,10 +218,10 @@ li {
     max-width: 45%;*/
     width: auto;
     margin: auto;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    margin-bottom: 80px;
+
+
     text-align: center;
     line-height: 200%;
     vertical-align: middle;
@@ -299,12 +299,15 @@ li {
 }
 
 
+
+
 .gomb.active{
     background-color: #3e8e41;
     box-shadow: 0 5px #666;
     transform: translateY(4px);
 
 }
+
 
 
 
@@ -359,6 +362,7 @@ input[type=number]:active, input[type=number]:focus{
     border-top: #3E7B27 5px solid;
     box-shadow: 10px -10px 26px -1px rgba(0, 0, 0, 0.226);
     position: fixed;
+
     bottom: 0;
 
     
@@ -400,4 +404,16 @@ td, th{
 
 #matrixTable{
     margin: auto;
+    height: auto;
+    width: auto;
+    padding: 10px;
+    text-align: center
+}
+
+#matrixTable tr, #matrixTable td{
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    padding: 10px;
+    padding-right: 20px;
 }
