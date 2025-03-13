@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerttervező</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/sql-wasm.js"></script>
+    <link rel="icon" type="image/x-icon" href="\novenyek/favicon.png">
+</head>
+<body>
+    <div id="top" class="">
+
+        <h5 id="tervezes" onclick="location.reload()"> <a href="probaindex.html" style="text-decoration: none;     color: rgb(243, 233, 233);">Tervezés</a></h5>
+        <h5 id="hozzaadas"> <a href="probahozzaad.html" style="text-decoration: none; color: rgb(243, 233, 233);">Hozzáadás</a></h5>
+
+        <h3 id="oldalnev">Kerttervező</h3>
+
+
+    </div>
+
+
+    <table id="novenyekTable">
+
+
+    </table>
+
+    
+
+    <script>
+
+        class Noveny {
+            constructor(id, magyar, latin, sor_tav, to_tav, kep, szin) {
+                this.id = id;
+                this.magyar = magyar;
+                this.latin = latin;
+                this.sor_tav = sor_tav;
+                this.to_tav = to_tav;
+                this.kep = kep;
+                this.szin = szin;
+
+
+            }
+        }
+        class Kapcsolat {
+            constructor(noveny1_id, noveny2_id, kapcsolatuk) {
+                this.noveny1_id = noveny1_id;
+                this.noveny2_id = noveny2_id;
+                this.kapcsolatuk = kapcsolatuk;
+            }
+        }
+        class Fajta {
+            constructor(id, nev, novenyek_id) {
+                this.id = id;
+                this.nev = nev;
+                this.novenyek_id = novenyek_id;
+
+            }
+        }
+        
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the query parameters from the URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const novenyekListaJSON = urlParams.get("novenyek");
+
+    // Decode the JSON string
+    const novenyekLista = novenyekListaJSON ? JSON.parse(decodeURIComponent(novenyekListaJSON)) : [];
+
+    // Render the plants in the table
+    renderTable(novenyekLista);
+});
+
+function renderTable(novenyekLista) {
+    let table = document.getElementById("novenyekTable");
+    if (!table) return; // Exit if the table element doesn't exist
+
+    // Clear the existing table content
+    table.innerHTML = "";
+
+    // Add table headers
+    const headers = ["Kép", "Magyar név", "Latin név", "Sor távolság", "Tő távolság", "Törlés"];
+    const headerRow = document.createElement("tr");
+    headers.forEach(headerText => {
+        const th = document.createElement("th");
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+    table.appendChild(headerRow);
+
+    // Add table rows for each plant
+    novenyekLista.forEach((noveny, index) => {
+        const row = document.createElement("tr");
+
+        // Image or color
+        const imgCell = document.createElement("td");
+        if (noveny.kep && noveny.kep.includes(".png")) {
+            const img = document.createElement("img");
+            img.src = noveny.kep;
+            img.alt = noveny.magyar;
+            img.style.width = "50px";
+            img.style.height = "50px";
+            imgCell.appendChild(img);
+        } else {
+            const colorDiv = document.createElement("div");
+            colorDiv.style.width = "50px";
+            colorDiv.style.height = "50px";
+            colorDiv.style.backgroundColor = noveny.szin || "#cccccc";
+            imgCell.appendChild(colorDiv);
+        }
+        row.appendChild(imgCell);
+
+        // Magyar név
+        const magyarCell = document.createElement("td");
+        magyarCell.textContent = noveny.magyar;
+        row.appendChild(magyarCell);
+
+        // Latin név
+        const latinCell = document.createElement("td");
+        latinCell.textContent = noveny.latin;
+        row.appendChild(latinCell);
+
+        // Sor távolság
+        const sorTavCell = document.createElement("td");
+        sorTavCell.textContent = `${noveny.sor_tav} cm`;
+        row.appendChild(sorTavCell);
+
+        // Tő távolság
+        const toTavCell = document.createElement("td");
+        toTavCell.textContent = `${noveny.to_tav} cm`;
+        row.appendChild(toTavCell);
+
+        // Törlés gomb
+        const deleteCell = document.createElement("td");
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "🗑️";
+        deleteButton.onclick = () => torolNoveny(index);
+        deleteCell.appendChild(deleteButton);
+        row.appendChild(deleteCell);
+
+        // Add the row to the table
+        table.appendChild(row);
+    });
+}
+
+
+/*
+function renderTable(novenyekLista) {
+    let table = document.getElementById("novenyekTable");
+    table.innerHTML = novenyekLista.map((noveny, index) => noveny.renderRow(index)).join("");
+}
+        
+
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Retrieve plants from localStorage
+    const novenyekLista = JSON.parse(localStorage.getItem("novenyek")) || [];
+
+    // Render the plants in the table
+    renderTable(novenyekLista);
+});*/
+    
+    </script>
+
+    <div id="footer">
+        <p>© 2025</p>
+    </div>
+
+</body>
+</html>

@@ -27,7 +27,7 @@
                 <label for="mennyiseg">A parcellák száma (darab)</label>
                 <input type="number" id="mennyiseg" name="mennyiseg" min="1" max="16" value="1">
                 <br>
-               <button id="kuldes1" onclick="kuldes()">Tovább</button>
+                <button id="kuldes1" onclick="kuldes()">Tovább</button>
             </form>
         </div>
         
@@ -64,7 +64,7 @@
         
 
         async function loadDatabase() {
-          
+
             const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.6.2/${file}` });
 
             const response = await fetch("kerttervezo.db");
@@ -81,7 +81,7 @@
                 let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
                 novenyekLista.push(noveny);
             });
-            console.log(novenyekLista[1].latin)
+            //console.log(novenyekLista[1].latin)
 
 
             //Kapcsolat táblának a listája
@@ -94,7 +94,7 @@
                 let kapcs = new Kapcsolat(row[0], row[1], row[2]);
                 kapcsolatLista.push(kapcs);
             });
-            console.log(kapcsolatLista[1].kapcsolatuk)
+           // console.log(kapcsolatLista[1].kapcsolatuk)
 
 
             //Fajta táblának a listája
@@ -107,7 +107,7 @@
                 let faj = new Fajta(row[0], row[1], row[2]);
                 fajtaLista.push(faj);
             });
-            console.log(fajtaLista[1].nev)
+            //console.log(fajtaLista[1].nev)
 
 
         }
@@ -119,7 +119,7 @@
             
 
             let mennyiseg = document.getElementById('mennyiseg').value;
-            console.log(mennyiseg); 
+           // console.log(mennyiseg); 
             let div1 = document.getElementById("kozep");
             if(mennyiseg.length == 0){
                 alert("Nem adott meg mennyiséget!");
@@ -145,7 +145,7 @@
                 input1.max = "20";
                 input1.name = "hossz";
                 input1.id = "hossz";
-                input1.value = "1";
+                input1.value = "10";
 
                 let br = document.createElement("br");
                 let br2 = document.createElement("br")
@@ -159,7 +159,7 @@
                 input2.max = "20";
                 input2.name = "szelesseg";
                 input2.id = "szelesseg";
-                input2.value = "1";
+                input2.value = "10";
 
                 let kuldes2 = document.createElement("button")
                 kuldes2.id = "kuldes2"; 
@@ -204,20 +204,35 @@
                             const buffer = await response.arrayBuffer();
                             const db = new SQL.Database(new Uint8Array(buffer));
 
+                            const results2 = db.exec("SELECT noveny1_id, noveny2_id, kapcsolatuk FROM kapcsolat");
+
+                            let kapcsolatLista = [];
+
+                            results2[0].values.forEach(row => {
+
+                                let kapcs = new Kapcsolat(row[0], row[1], row[2]);
+                                kapcsolatLista.push(kapcs);
+                            });
+                            //console.log(kapcsolatLista[1].kapcsolatuk)
+
                             const results3 = db.exec("SELECT id, nev, novenyek_id FROM fajta");
 
                             let fajtaLista = [];
+
                             results3[0].values.forEach(row => {
+
                                 let faj = new Fajta(row[0], row[1], row[2]);
                                 fajtaLista.push(faj);
                             });
+                            
 
                             const results = db.exec("SELECT id, magyar_nev, latin_nev, sor_tav, to_tav, kep FROM novenyek");
                             div2.remove();
                             let div4 = document.createElement("div");
                             div4.id = "kozep3";
                         
-                                    
+                            
+
                             let novenyekLista = [];
                             results[0].values.forEach(row => {
                                 let noveny = new Noveny(row[0], row[1], row[2], row[3], row[4], row[5]);
@@ -265,65 +280,255 @@
                             div4.appendChild(br3);
                             let button2 = document.createElement("button");
                             button2.id = "kuldes3";
+                            button2.type = "submit";
                             button2.textContent = "Tovább";
+                            //let input3;
                             div4.appendChild(button2);
                             kuldes3.addEventListener("click", function(event){
                                 event.preventDefault();
-                                div4.remove();
-                                let div5 = document.createElement("div");
-                                div5.id = "kozep4";
-
-                                let table = document.createElement("table");
-                                table.id = "valasztoTable";
-
                                 if (selectedNovenyek.length === 0) {
                                     alert("Nem választott ki egy növényt sem!");
                                     return;
                                 }
+                                else{
+                                    div4.remove();
+                                    let div5 = document.createElement("div");
+                                    div5.id = "kozep4";
 
-                                selectedNovenyek.forEach(novenyId => {
-                                    let noveny = novenyekLista.find(n => n.id === novenyId);
-                                    let fajtai = fajtaLista.filter(f => f.novenyek_id === novenyId);
+                                    let table = document.createElement("table");
+                                    table.id = "valasztoTable";
 
-                                    if (fajtai.length > 0) {
-                                        let rowSpan = fajtai.length;
+                                    
 
-                                        fajtai.forEach((fajta, index) => {
-                                            let row = document.createElement("tr");
+                                    selectedNovenyek.forEach(novenyId => {
+                                        let noveny = novenyekLista.find(n => n.id === novenyId);
+                                        let fajtai = fajtaLista.filter(f => f.novenyek_id === novenyId);
 
-                                            if (index === 0) {
-                                                let cell = document.createElement("td");
-                                                cell.rowSpan = rowSpan;
-                                                cell.textContent = noveny.magyar;
-                                                row.appendChild(cell);
+                                        if (fajtai.length > 0) {
+                                            let rowSpan = fajtai.length;
+
+                                            fajtai.forEach((fajta, index) => {
+                                                let row = document.createElement("tr");
+
+                                                if (index === 0) {
+                                                    let cell = document.createElement("td");
+                                                    cell.rowSpan = rowSpan;
+                                                    cell.textContent = noveny.magyar;
+                                                    row.appendChild(cell);
+                                                }
+
+                                                let fajtaCell = document.createElement("td");
+                                                fajtaCell.classList = "fajtaCell";
+                                                let fajtaInput = document.createElement("td");
+                                                input3 = document.createElement("input");
+                                                input3.classList = "input3"
+                                                input3.type = "number";
+                                                input3.min = "0";
+                                                fajtaCell.innerHTML = fajta.nev;
+                                                fajtaInput.appendChild(input3);
+                                                row.appendChild(fajtaCell);
+                                                row.appendChild(fajtaInput);
+                                                table.appendChild(row);
+                                                //console.log(fajta.nev)
+                                            });
+                                        }
+                                    });
+
+                                    let kuldes4 = document.createElement("button");
+                                    kuldes4.id = "kuldes4";
+                                    kuldes4.textContent = "Küldés"
+                                    kuldes4.type = "submit";
+                                    let br4 = document.createElement("br");
+                                    
+                                    div5.appendChild(table);
+                                    div5.appendChild(br4);
+                                    div5.appendChild(kuldes4);
+
+                                    document.body.appendChild(div5);
+                                    document.body.insertBefore(div5, footer);
+                                    //console.log(selectedNovenyek)   
+                                                                                    
+                                    kuldes4.addEventListener("click", function(event){
+                                        event.preventDefault();
+                                        let db = 0;
+                                        let input3 =[... document.getElementsByClassName("input3")]
+                                        input3.forEach((e) => {db += +e.value})
+                                        
+                                        let fajtaLista = [...document.getElementsByClassName("fajtaCell")];
+                                        //fajtaLista.forEach((e) => {console.log(e.textContent)})
+                                        if(db == 0)
+                                        {
+                                            alert("Nem adott meg egyetlen egy növényfajta mennyiséget sem")
+                                        }
+                                        else{
+                                           div5.remove();
+                                           /*const preferences = {};
+                                           const plants = {};
+
+                                          
+
+                                            for (const noveny of novenyekLista) {
+                                                const magyar = noveny.magyar;
+                                                preferences[magyar] = {nem_szereti : []} ;
+                                                for (const kapcsolat of kapcsolatLista) {
+                                                    if(noveny.id === kapcsolat.noveny1_id && kapcsolat.kapcsolatuk === "nem"){
+                                                        const masikNoveny = novenyekLista.find(n => n.id === kapcsolat.noveny2_id).magyar;
+
+                                                        preferences[magyar].nem_szereti.push(masikNoveny);    
+                                                    }
+                                                }
+                                           }
+                                           console.log(preferences)
+                                           
+                                           function ellenorzes(grid, row, col, plant){
+                                            const directions = [
+                                                [-1, 0], [1, 0], [0, -1], [0, 1]
+                                            ]
+                                            for(const [dr, dc] of directions){
+                                                const r = row + dr;
+                                                const c = col + dc;
+                                                if(r >= 0 && r < grid.length && c >= 0 && c < grid[0].length){
+                                                    const neighbor = grid[r][c];
+                                                    if(preferences[plant].nem_szereti.includes(neighbor)){
+                                                        return false;
+                                                    }
+                                                }
+                                            }
+                                            return true;
+                                           }
+
+                                           function solve(grid, plants, index){
+                                            if(index === plants.length){
+                                                return true;
+                                            }
+                                            const [plant, count] = plants[index];
+                                            for(let row = 0; row < grid.length; row++){
+                                                for(let col = 0; col < grid.length; col++){
+                                                    if(grid[row][col] === '' && ellenorzes(grid, rol, col, plant)){
+                                                        grid[row][col] = plant;
+                                                        plants[index][1]--;
+                                                        if(plants[index][1] === 0){
+                                                            if(solve(grid, plants, index + 1)){
+                                                                return true;
+                                                            }
+                                                        }
+                                                        else{
+                                                            if(solve(grid, plants, index)){
+                                                                return true;
+                                                            }
+                                                        }
+                                                        
+                                                        grid[row][col] = null;
+                                                        plants[index][1]++;
+                                                    }
+                                                }
+                                            }
+                                            return false;
+                                           }
+                                           
+                                           let div6 = document.createElement("div");
+                                           div6.id = "kozep5";
+
+                                           function createGrid(grid){
+                                            let table = document.createElement("table");
+                                            table.id = "matrixTable";
+                                            for(let row = 0; row < grid.length; row++){
+                                                let sor = document.createElement("tr");
+                                                for(let col = 0; col < grid.length; col++){
+                                                    let cell = document.createElement("td");
+                                                    cell.textContent = grid[row][col];
+                                                    row.appendChild(cell);
+                                                }
+                                                table.appendChild(sor);
+                                                div6.appendChild(table);
+                                                document.body.appendChild(div6);
+                                                document.body.insertBefore(div6, footer);
+                                            }
+                                            return table;
+                                           }
+
+                                           for(const novenyke of novenyekLista){
+                                                for (let i = 0; i < input3.length; i++) {
+                                                    if (novenyke.id === input3[i]) {
+                                                        let neve = novenyke.magyar;
+                                                        let mennyiseg = input3[i].value;
+                                                        plants[neve] = { count: mennyiseg };
+                                                }
+
+                
+
+               
+
+
+                                                }
                                             }
 
-                                            let fajtaCell = document.createElement("td");
-                                            let input3 = document.createElement("input");
-                                            input3.type = "number";
-                                            input3.min = "0";
-                                            fajtaCell.innerHTML = fajta.nev;
-                                            fajtaCell.appendChild(input3);
-                                            row.appendChild(fajtaCell);
-                                            table.appendChild(row);
-                                        });
-                                    }
-                                });
+                                           const grid = new Array(input1.value).fill(null).map(() => new Array(input2.value).fill(null));*/
+
+                                           let div6 = document.createElement("div");
+                                           div6.id = "kozep5";
+
+                                           let table2 = document.createElement("table");
+                                           table2.id = "matrixTable";
+                                           for(let i = 0; i < input1.value; i++){
+                                            let row = document.createElement("tr");
+                                            for(let j = 0; j < input2.value; j++){
+                                                let cell = document.createElement("td");
+                                                cell.textContent = "";
+                                                row.appendChild(cell);
+                                            }
+                                            table2.appendChild(row);
+                                           }
+                                           let rowIndex = 0;
+                                           let colIndex = 0;
+
+                                           fajtaLista.forEach((fajtaCell, index) => {
+                                                const fajtaNev = fajtaCell.textContent; 
+                                                const mennyiseg = parseInt(input3[index].value); 
+
+                                            for (let i = 0; i < mennyiseg; i++) {
+                                                const cell = table2.rows[rowIndex]?.cells[colIndex]; 
+
+                                                if (cell) {
+                                                    cell.textContent = fajtaNev; 
+                                                }
+                                                colIndex++;
+                                                if (colIndex >= input2.value) {
+                                                    colIndex = 0;
+                                                    rowIndex++;
+
+                                                    if (rowIndex >= input1.value) {
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                            });
+
+                                           div6.appendChild(table2);
+                                           document.body.appendChild(div6);
+                                           document.body.insertBefore(div6, footer);
+                                        }
+                                        
+                                        
+                                    });
                                 
-                                div5.appendChild(table);
-                                document.body.appendChild(div5);
-                                document.body.insertBefore(div5, footer);
-                                console.log(selectedNovenyek)          
+                                }
+                                
                             });
 
                         }
                         loadDatabase();
+                        
                     }
                 })
             }
         }
         
        
+    </script>
+
+    <script>
+        
     </script>
 
     <div id="footer">

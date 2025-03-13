@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+       const plants = [
+            { name: "Paradicsom", minSpacing: 1, dislikes: ["Krumpli"] },
+            { name: "Krumpli", minSpacing: 1, dislikes: ["Paradicsom"] },
+            { name: "Répa", minSpacing: 1, dislikes: ["Krumpli"] },
+            { name: "Saláta", minSpacing: 1, dislikes: ["Paradicsom"] }
+        ];
+
+        const ROWS = 2;  // Kert sorainak száma
+        const COLS = 10;  // Kert oszlopainak száma
+        let garden = Array.from({ length: ROWS }, () => Array(COLS).fill(null));
+
+        function isValidPlacement(garden, row, col, plant) {
+            const directions = [
+                [-1, 0], [1, 0], [0, -1], [0, 1] // Fel, le, balra, jobbra
+            ];
+
+            for (let [dx, dy] of directions) {
+                let newRow = row + dx;
+                let newCol = col + dy;
+
+                if (newRow >= 0 && newRow < garden.length &&
+                    newCol >= 0 && newCol < garden[0].length) {
+                    
+                    let neighbor = garden[newRow][newCol];
+                    if (neighbor && plant.dislikes.includes(neighbor.name)) {
+                        return false; // Nem szereti ezt a szomszédot
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        function plantGarden(garden, row, col, plantIndex) {
+            if (plantIndex >= plants.length) return true; // Ha minden növény elhelyezve, kész
+
+            if (col === COLS) { // Ha elértük a sor végét, lépünk a következőre
+                row++;
+                col = 0;
+            }
+
+            if (row === ROWS) return false; // Ha túlléptünk az ágyáson, nincs megoldás
+
+            let plant = plants[plantIndex];
+
+            if (isValidPlacement(garden, row, col, plant)) {
+                garden[row][col] = plant; // Elhelyezzük a növényt
+                
+                if (plantGarden(garden, row, col + 1, plantIndex + 1)) {
+                    return true; // Ha sikerült, visszatérünk
+                }
+
+                garden[row][col] = null; // Backtracking: visszalépünk
+            }
+
+            return plantGarden(garden, row, col + 1, plantIndex); // Próbálunk egy másik helyet
+        }
+
+        plantGarden(garden, 0, 0, 0);
+
+        // Kiíratás konzolra
+        console.log(garden.map(row => row.map(p => (p ? p.name : "-")).join(" | ")).join("\n"));
+
+
+
+
+    </script>
+</body>
+</html>

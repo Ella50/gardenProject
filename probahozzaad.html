@@ -65,8 +65,9 @@
 
 <body>
     <div id="top">
-        <h5 id="tervezes" onclick="location.reload()"> <a href="index.html" style="text-decoration: none; color: rgb(243, 233, 233);">Tervezés</a></h5>
+        <h5 id="tervezes" > <a href="index.html" style="text-decoration: none; color: rgb(243, 233, 233);">Tervezés</a></h5>
         <h5 id="hozzaadas"> <a href="hozzaadas.html" style="text-decoration: none; color: rgb(243, 233, 233);">Hozzáadás</a></h5>
+        <button onclick="navigateToIndex()">Vissza a főoldalra</button>
         <h3 id="oldalnev">Kerttervező</h3>
     </div>
 
@@ -142,7 +143,7 @@
         function loadTable() {
             const results = db.exec("SELECT magyar_nev, latin_nev, sor_tav, to_tav, kep, szin FROM novenyek");
             let adatbazisNovenyek = results[0].values.map(row => 
-                new Noveny(Date.now(), row[0], row[1], row[2], row[3], row[4], row[5] || "#cccccc")
+                new Noveny(Date.now(), row[0], row[1], row[2], row[3], row[4], row[5], row[6])
             );
     
             const localData = JSON.parse(localStorage.getItem("novenyek")) || [];
@@ -179,45 +180,46 @@ document.getElementById("novenyForm").addEventListener("submit", async function(
 
     if (alreadyExists) {
         alert("Ez a növény már létezik a listában!");
-        document.getElementById("novenyForm").reset();
-        return; // Stop the function if the plant already exists
+        return;
     }
-    document.getElementById("novenyForm").reset();
-    // Create a new plant object
-    let ujNoveny = new Noveny(Date.now(), magyarNev, latinNev, sorTav, toTav, null, szin);
-    novenyekLista.push(ujNoveny);
-
-    // Save to localStorage
-    localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
 
     // Send the new plant data to the PHP backend
     try {
-    const response = await fetch("http://localhost:8000/add-plant.php", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            magyar: magyarNev,
-            latin: latinNev,
-            sor_tav: sorTav,
-            to_tav: toTav,
-            szin: szin,
-        }),
-    });
+        const response = await fetch("add-plant.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                magyar: magyarNev,
+                latin: latinNev,
+                sor_tav: sorTav,
+                to_tav: toTav,
+                szin: szin,
+            }),
+        });
 
-    console.log("Response status:", response.status); // Log the response status
+        if (!response.ok) {
+            throw new Error("Hiba a növény hozzáadásakor");
+        }
 
-    
         const result = await response.json();
         console.log("Növény hozzáadva az adatbázishoz:", result);
+
+        // Create a new plant object with the returned ID
+        let ujNoveny = new Noveny(result.id, magyarNev, latinNev, sorTav, toTav, null, szin);
+        novenyekLista.push(ujNoveny);
+
+        // Save to localStorage
+        localStorage.setItem("novenyek", JSON.stringify(novenyekLista));
+
+        // Render the updated table
+        renderTable();
     } catch (error) {
         console.error("Hiba:", error);
     }
-
-    // Render the updated table
-    renderTable();
 });
+
     
         function torolNoveny(index) {
             if (confirm("Biztosan törlöd ezt a növényt?")) {
@@ -228,6 +230,22 @@ document.getElementById("novenyForm").addEventListener("submit", async function(
         }
     
         loadDatabase();
+
+
+
+        function navigateToIndex() {
+    // Convert the list of plants to a JSON string
+    const novenyekListaJSON = JSON.stringify(novenyekLista);
+
+    // Encode the JSON string for use in a URL
+    const encodedData = encodeURIComponent(novenyekListaJSON);
+
+    // Navigate to index.html with the data as a query parameter
+    window.location.href = `probaindex.html?novenyek=${encodedData}`;
+}
+
+
+
     </script>
 
     <div id="footer">

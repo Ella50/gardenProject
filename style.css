@@ -47,8 +47,6 @@ body {
 }
 
 
-<<<<<<< HEAD
-=======
 
 #footer{
     background-color: #123524;
@@ -57,7 +55,6 @@ body {
     border-top: #3E7B27 15px solid;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.3);
 }
->>>>>>> main
 
 #oldalnev{
     color: rgb(243, 233, 233);
@@ -87,7 +84,7 @@ body {
 }
 
 #tervezes:hover, #hozzaadas:hover{
-    transform: scale(1.05);
+    transform: scale(1.005);
 }
 
 #hozzaadas{
@@ -220,25 +217,24 @@ li {
     border-radius: 10px;
     max-width: 45%;*/
     width: auto;
-    height: auto;
     margin: auto;
-    /*position: absolute;*/
+    position: absolute;
     top: 50%;
     left: 50%;
-    /*transform: translate(-50%, -50%);*/
+    transform: translate(-50%, -50%);
     text-align: center;
     line-height: 200%;
     vertical-align: middle;
     justify-content: center;
     align-items: center;
-    display: flex;
+    display: flexbox;
     border: #3E7B27 15px solid;
     background-color: #85A947;
     padding: 30px;
     box-shadow: 10px 10px 26px -1px rgba(0,0,0,0.55);
     box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.2), 0 4px 8px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    animation: fadeIn 0.8s ease-in-out;
+    /*animation: fadeIn 0.8s ease-in-out;*/
     max-width: 40%;
 }
 
@@ -319,7 +315,7 @@ button:hover{
     
 }
 
-#kuldes1, #kuldes2, #kuldes3, #hozza{
+#kuldes1, #kuldes2, #kuldes3, #kuldes4, #hozza{
     cursor: pointer;
     background-color: #123524;
     color: white;
@@ -329,7 +325,7 @@ button:hover{
     margin: 10px;
 }
 
-#kuldes1:hover, #kuldes2:hover, #kuldes3:hover, #hozza:hover{
+#kuldes1:hover, #kuldes2:hover, #kuldes3:hover,#kuldes4:hover, #hozza:hover{
     background-color: rgb(17, 87, 17);
     color: rgb(231, 223, 223);
     transform: scale(1.05);
@@ -378,4 +374,30 @@ input[type=number]:active, input[type=number]:focus{
 img{
     image-rendering: pixelated;
 
+}
+
+.input3{
+    width: 100px;
+}
+
+#valasztoTable{
+    table-layout: fixed;
+    border: 2px solid black;
+    border-collapse: collapse;
+}
+
+td, th{
+    border: 2px solid black;
+    padding: 5px;
+    text-align: center;
+}
+
+#kozep5{
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+}
+
+#matrixTable{
+    margin: auto;
 }
